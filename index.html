@@ -151,6 +151,60 @@
   .cta .note{font-family:var(--f-mono);font-size:13px;color:#000;background:#ffff00;display:inline-block;border:2px solid #000;padding:2px 8px;margin:6px 0;}
   .footer{text-align:center;padding:14px 8px;font-family:var(--f-mono);font-size:12px;color:#000;background:#c0c0c0;border-top:4px solid #808080;}
   .footer .ring{display:inline-block;border:2px solid #000;background:#000;color:#00ff00;font-family:var(--f-mono);padding:2px 8px;margin:4px;}
+
+  
+  #annOverlay{
+    position:fixed;inset:0;z-index:5000;display:none;
+    align-items:center;justify-content:center;padding:20px;
+    background:rgba(0,0,0,.45);
+  }
+  #annOverlay.show{display:flex;}
+  #annBox{
+    max-width:520px;width:100%;max-height:86vh;overflow:auto;
+    background:#C0C0C0;color:#000;
+    border:2px solid;border-color:#fff #808080 #808080 #fff;
+    box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf,4px 4px 0 #000;
+    display:flex;flex-direction:column;
+  }
+  #annTitle{
+    background:linear-gradient(to right,#000080,#1084d0);color:#fff;
+    font-family:var(--f-head);font-size:14px;letter-spacing:.5px;
+    padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  #annTitle .icon{
+    width:16px;height:16px;border:1px solid;border-color:#fff #808080 #808080 #fff;
+    background:#C0C0C0;display:inline-flex;align-items:center;justify-content:center;
+    color:#000;font-family:var(--f-mono);font-size:11px;font-weight:bold;cursor:pointer;
+  }
+  #annTitle .icon:hover{background:#d4d4d4;}
+  #annBody{
+    padding:16px;font-family:var(--f-body);font-size:15px;line-height:1.55;
+  }
+  #annBody p{margin:0 0 10px;}
+  #annBody p:last-child{margin-bottom:0;}
+  #annBody .songs{
+    font-family:var(--f-mono);font-size:12px;background:#FFFFCC;
+    border:1px solid #808080;padding:8px 10px;margin:10px 0;
+    columns:2;column-gap:18px;
+  }
+  @media(max-width:460px){#annBody .songs{columns:1;}}
+  #annBody .songs span{display:block;break-inside:avoid;}
+  #annFooter{
+    padding:10px 12px;border-top:1px solid #808080;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    font-family:var(--f-mono);font-size:11px;color:#444;
+  }
+  #annOk{
+    font-family:var(--f-body);font-size:13px;font-weight:bold;text-transform:uppercase;
+    background:#000080;color:#fff;cursor:pointer;padding:8px 22px;
+    border:2px solid;border-color:#5555ff #000040 #000040 #5555ff;
+    box-shadow:inset -1px -1px 0 #000,inset 1px 1px 0 #aaaaff;
+  }
+  #annOk:hover{background:#1a1ac0;}
+  #annOk:active{border-color:#000040 #5555ff #5555ff #000040;transform:translate(1px,1px);}
+  #annDonk{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+  #annDonk input{margin:0;}
+
   @media(prefers-reduced-motion:reduce){
     .rainbow{animation:none;color:#ff0000;}.pulse{animation:none;}.blink{animation:none;}
     .marquee-track{animation:none;}.t-eq span{animation:none;}
@@ -158,6 +212,22 @@
 </style>
 </head>
 <body>
+
+
+<div id="annOverlay" role="dialog" aria-modal="true" aria-labelledby="annTitleText" aria-hidden="true">
+  <div id="annBox">
+    <div id="annTitle">
+      <span id="annTitleText">FIVESTAR*VAULT NOTICE</span>
+      <span class="icon" id="annCloseX" title="Close" role="button" tabindex="0" aria-label="Close">&times;</span>
+    </div>
+    <div id="annBody"></div>
+    <div id="annFooter">
+      <label id="annDonk"><input type="checkbox" id="annDontShow" /> don't show again</label>
+      <button id="annOk" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
 <div class="topbar">
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff69b4" stroke-width="2.5" stroke-linecap="round" style="vertical-align:middle;"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>
   &nbsp; FIVESTARVAULT &nbsp;|&nbsp; by 2kjerk2kjerk &nbsp;|&nbsp; <span class="fun">turn your speakers ON!</span>
@@ -166,7 +236,7 @@
   <div class="marquee-track">
     <span class="yel">FIVESTAR*VAULT OUT NOW!!!</span>
     &nbsp;&nbsp;<span class="red">&lt;&gt;</span>&nbsp;&nbsp;
-    <span class="grn">press <span class="yel">SPACE</span> to play / pause</span>
+    <span class="grn">UPDATED <span class="yel">6/23/26</span>!</span>
     &nbsp;&nbsp;<span class="cy">&lt;&gt;</span>&nbsp;&nbsp;
     <span class="mg">under construction!!!</span>
   </div>
@@ -308,6 +378,9 @@
       <button class="ibtn focusable" id="muteBtn" type="button" title="Mute (M)" aria-label="Mute">
         <span id="muteIcon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 7a8 8 0 0 1 0 10"/></svg></span>
       </button>
+      <a class="ibtn focusable" id="dlBtn" href="#" download title="Download current track (D)" aria-label="Download current track" style="display:none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </a>
       <div class="vol-wrap">
         <div class="bar focusable" id="volBar" role="slider" tabindex="0" aria-label="Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
           <div class="bar-fill" id="volFill" style="width:100%;"></div>
@@ -356,6 +429,8 @@ const RAW=[
   ["2026","songs/2026/trendingtopic.mp3"],
   ["2026","songs/2026/twotime.m4a"],
   ["2026","songs/2026/wejustwannaparty.mp3"],
+  ["2026","songs/2026/thongsong.mp3"],
+  ["2026","songs/2026/vendetta.mp3"],
   ["pbm2025","songs/2025/pbm2025/01 _rockstar_ V1.mp3"],
   ["pbm2025","songs/2025/pbm2025/02 _scream_ V1.mp3"],
   ["pbm2025","songs/2025/pbm2025/03 _gokart_ V1.mp3"],
@@ -425,6 +500,30 @@ const RAW=[
   ["2024","songs/2024/suicide.mp3"],
   ["2024","songs/2024/wokeuprich.mp3"],
   ["2024","songs/2024/_switchlanes_ V3.mp3"],
+  ["2024","songs/2024/1250.mp3"],
+  ["2024","songs/2024/bangout.mp3"],
+  ["2024","songs/2024/blackwing.mp3"],
+  ["2024","songs/2024/butterflymydoors.mp3"],
+  ["2024","songs/2024/buttonmashin.mp3"],
+  ["2024","songs/2024/comethru.mp3"],
+  ["2024","songs/2024/dieabout.mp3"],
+  ["2024","songs/2024/dust.mp3"],
+  ["2024","songs/2024/FEELAWAY.mp3"],
+  ["2024","songs/2024/fittedcaps.mp3"],
+  ["2024","songs/2024/muscle.mp3"],
+  ["2024","songs/2024/pinkeverything.mp3"],
+  ["2024","songs/2024/plastic hoes.mp3"],
+  ["2024","songs/2024/problematic.mp3"],
+  ["2024","songs/2024/ramadan.mp3"],
+  ["2024","songs/2024/realestate.mp3"],
+  ["2024","songs/2024/showit.mp3"],
+  ["2024","songs/2024/somuch.mp3"],
+  ["2024","songs/2024/swag 3.mp3"],
+  ["2024","songs/2024/SWATTEAM.mp3"],
+  ["2024","songs/2024/switchlanes.mp3"],
+  ["2024","songs/2024/thatsallright.mp3"],
+  ["2024","songs/2024/thetop.mp3"],
+  ["2024","songs/2024/topshelf.mp3"],
   ["2023","songs/2023 & Before/backofdacoupe.mp3"],
   ["2023","songs/2023 & Before/baddiehub anthem.mp3"],
   ["2023","songs/2023 & Before/batman.mp3"],
@@ -440,6 +539,14 @@ const RAW=[
   ["2023","songs/2023 & Before/streamon.mp3"],
   ["2023","songs/2023 & Before/throwingfives.mp3"],
   ["2023","songs/2023 & Before/wtf.mp3"],
+  ["2023","songs/2023 & Before/freakbitch (remaster).mp3"],
+  ["2023","songs/2023 & Before/g6.mp3"],
+  ["2023","songs/2023 & Before/hardonthots.mp3"],
+  ["2023","songs/2023 & Before/imissyou.mp3"],
+  ["2023","songs/2023 & Before/jucostar.mp3"],
+  ["2023","songs/2023 & Before/mouth piece.mp3"],
+  ["2023","songs/2023 & Before/omg.mp3"],
+  ["2023","songs/2023 & Before/pulloutaflute.mp3"],
   ["prince","songs/prince/battleofthebands.mp3"],
   ["prince","songs/prince/hesi.mp3"],
   ["prince","songs/prince/jimihendrix.mp3"],
@@ -522,7 +629,7 @@ const elFilters=$("filters"),elLibRoot=$("libraryRoot"),elLibCount=$("libCount")
 const elNpTitle=$("npTitle"),elNpSub=$("npSubline"),elNpCover=$("npCover"),elNpInit=$("npInitial"),elNpCat=$("npCat"),elNpYr=$("npYr"),elNpStatus=$("npStatusLabel");
 const elHeroPlay=$("heroPlay"),elHeroPlayIcon=$("heroPlayIcon"),elHeroPlayLabel=$("heroPlayLabel"),elHeroShuffle=$("heroShuffle");
 const elPlayBtn=$("playBtn"),elPlayIcon=$("playIcon"),elPrevBtn=$("prevBtn"),elNextBtn=$("nextBtn"),elBackBtn=$("backBtn"),elFwdBtn=$("fwdBtn");
-const elShuffleBtn=$("shuffleBtn"),elRepeatBtn=$("repeatBtn"),elRepeatIcon=$("repeatIcon"),elMuteBtn=$("muteBtn"),elMuteIcon=$("muteIcon");
+const elShuffleBtn=$("shuffleBtn"),elRepeatBtn=$("repeatBtn"),elRepeatIcon=$("repeatIcon"),elMuteBtn=$("muteBtn"),elMuteIcon=$("muteIcon"),elDlBtn=$("dlBtn");
 const elCurTime=$("curTime"),elDurTime=$("durTime"),elSeekBar=$("seekBar"),elSeekFill=$("seekFill");
 const elVolBar=$("volBar"),elVolFill=$("volFill");
 const elTrTitle=$("trTitle"),elTrSub=$("trSub"),elTrCover=$("trCover"),elTrInitial=$("trInitial");
@@ -610,12 +717,13 @@ function pred(){
 function vis(){
   const t=prs();
   if(!t){
-    elNpTitle.textContent="PICK A SONG!";elNpSub.innerHTML='<span class="chip navy">SELECT A RECORD</span>';
+    elNpTitle.textContent="PICK A SONG!";elNpSub.innerHTML='<span class="chip navy">PLAY A SONG</span>';
     elNpInit.textContent="V";elNpCat.textContent="";elNpYr.textContent="";
     elNpCover.querySelectorAll("img").forEach(n=>n.remove());elNpInit.style.display="";
     elTrTitle.textContent="Nothing playing";elTrSub.textContent="STANDBY";
     elTrInitial.textContent="V";elTrCover.querySelectorAll("img").forEach(n=>n.remove());
     elTrCover.querySelector(".ic").style.display="";elTrCover.querySelector(".ic").textContent="V";
+    elDlBtn.style.display="none";elDlBtn.href="#";elDlBtn.removeAttribute("download");
     return;
   }
   elNpTitle.textContent=t.title;
@@ -634,6 +742,8 @@ function vis(){
   const ic=elTrCover.querySelector(".ic");
   if(t.cover){ic.style.display="none";const img=document.createElement("img");img.alt="";img.src=ini(t.cover);elTrCover.appendChild(img);}
   else{ic.style.display="";ic.textContent=rlib(t.title);}
+  const dlUrl="https://github.com/2kjerk/2kjerk.github.io/raw/refs/heads/master/"+t.src;
+  elDlBtn.href=dlUrl;elDlBtn.download=t.filename;elDlBtn.style.display="";
 }
 audio.addEventListener("play",()=>{state.isPlaying=true;
   elPlayIcon.innerHTML=ICON_PAUSE;elHeroPlayIcon.innerHTML=ICON_PAUSE_SM;
@@ -768,6 +878,95 @@ function rfl(){
 }
 document.addEventListener("DOMContentLoaded",rfl);
 if(document.readyState!=="loading")rfl();
+
+const ANNOUNCEMENT = {
+  enabled: true,                              
+  id: "1",                     
+  windowHours: 12,                           
+  startAt: "2026-06-23T00:00:00",             
+  title: "UPDATE",
+  body: [
+    "fivestarvault was down for about 2 hours due to hosting issues. everythings resolved.",
+    "during the downtime a few songs were added:"
+  ],
+  songList: [
+    "Swag 3","1250","Comethru","Bangout","Freakbitch","Blackwing",
+    "Butterflymydoors","Buttonmashin","Dieabout","Dust","Feelaway",
+    "Fittedcaps","Muscle","Plastic Hoes","Problematic","Ramadan",
+    "Realestate","Showit","Somuch","Swatteam","Thatsallright",
+    "Thetop","Topshelf"
+  ],
+};
+
+const ANN_LS = "vault:annDismissed:" + ANNOUNCEMENT.id;
+const annOverlay = document.getElementById("annOverlay");
+const annBody = document.getElementById("annBody");
+const annTitleText = document.getElementById("annTitleText");
+const annOk = document.getElementById("annOk");
+const annCloseX = document.getElementById("annCloseX");
+const annDontShow = document.getElementById("annDontShow");
+
+function shouldShowAnnouncement(){
+  if(!ANNOUNCEMENT.enabled) return false;
+  const start = new Date(ANNOUNCEMENT.startAt).getTime();
+  if(!isNaN(start)){
+    const elapsedH = (Date.now() - start) / 36e5;
+    if(elapsedH < 0) return false;          
+    if(elapsedH > ANNOUNCEMENT.windowHours) return false; 
+  }
+  try{
+    if(localStorage.getItem(ANN_LS) === "1") return false; 
+  }catch(e){}
+  return true;
+}
+function buildAnnouncementBody(){
+  let html = "";
+  (ANNOUNCEMENT.body || []).forEach(p => { html += "<p>" + esc(p) + "</p>"; });
+  if(ANNOUNCEMENT.songList && ANNOUNCEMENT.songList.length){
+    html += '<div class="songs">';
+    ANNOUNCEMENT.songList.forEach(s => { html += "<span>" + esc(s) + "</span>"; });
+    html += "</div>";
+  }
+  return html;
+}
+function openAnnouncement(){
+  if(!annOverlay) return;
+  annTitleText.textContent = ANNOUNCEMENT.title || "NOTICE";
+  annBody.innerHTML = buildAnnouncementBody();
+  annDontShow.checked = false;
+  annOverlay.classList.add("show");
+  annOverlay.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+  
+  setTimeout(()=>{ try{ annOk.focus(); }catch(e){} }, 30);
+}
+function dismissAnnouncement(){
+  if(annDontShow.checked){
+    try{ localStorage.setItem(ANN_LS, "1"); }catch(e){}
+  }
+  annOverlay.classList.remove("show");
+  annOverlay.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+}
+annOk.addEventListener("click", dismissAnnouncement);
+annCloseX.addEventListener("click", dismissAnnouncement);
+annCloseX.addEventListener("keydown", e=>{
+  if(e.key === "Enter" || e.key === " "){ e.preventDefault(); dismissAnnouncement(); }
+});
+annOverlay.addEventListener("click", e=>{
+  if(e.target === annOverlay) dismissAnnouncement(); 
+});
+document.addEventListener("keydown", e=>{
+  if(annOverlay.classList.contains("show") && e.key === "Escape") dismissAnnouncement();
+});
+
+if(shouldShowAnnouncement()){
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", ()=>setTimeout(openAnnouncement, 250));
+  } else {
+    setTimeout(openAnnouncement, 250);
+  }
+}
 </script>
 </body>
 </html>
