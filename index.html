@@ -339,7 +339,7 @@
       <div class="tr-cover" id="trCover"><span class="ic" id="trInitial">V</span></div>
       <div class="tr-info">
         <div class="tr-title" id="trTitle">Nothing playing</div>
-        <div class="tr-sub" id="trSub">STANDBY</div>
+        <div class="tr-sub" id="trSub">WAITING</div>
       </div>
     </div>
     <div class="tr-center">
@@ -472,6 +472,7 @@ const RAW=[
   ["2024","songs/2024/bebe.mp3"],
   ["2024","songs/2024/blacktruck.mp3"],
   ["2024","songs/2024/camp.mp3"],
+  ["2024","songs/2024/clown.mp3"],
   ["2024","songs/2024/changelanes.mp3"],
   ["2024","songs/2024/deathnote.mp3"],
   ["2024","songs/2024/extra.mp3"],
@@ -482,6 +483,9 @@ const RAW=[
   ["2024","songs/2024/how2jerk.mp3"],
   ["2024","songs/2024/huracan.mp3"],
   ["2024","songs/2024/ionknow.mp3"],
+  ["2024","songs/2024/je jure.mp3"],
+  ["2024","songs/2024/drinkin n drivin.mp3"],
+  ["2024","songs/2024/stashingreen.mp3"],
   ["2024","songs/2024/madein15minutes.mp3"],
   ["2024","songs/2024/needadoctor.mp3"],
   ["2024","songs/2024/omg.mp3"],
@@ -502,6 +506,7 @@ const RAW=[
   ["2024","songs/2024/_switchlanes_ V3.mp3"],
   ["2024","songs/2024/1250.mp3"],
   ["2024","songs/2024/bangout.mp3"],
+  ["2024","songs/2024/beaverskin.mp3"],
   ["2024","songs/2024/blackwing.mp3"],
   ["2024","songs/2024/butterflymydoors.mp3"],
   ["2024","songs/2024/buttonmashin.mp3"],
@@ -528,6 +533,7 @@ const RAW=[
   ["2023","songs/2023 & Before/baddiehub anthem.mp3"],
   ["2023","songs/2023 & Before/batman.mp3"],
   ["2023","songs/2023 & Before/deja vu.mp3"],
+  ["2023","songs/2023 & Before/drinkin n drivin.mp3"],
   ["2023","songs/2023 & Before/everything (2022).mp3"],
   ["2023","songs/2023 & Before/jail.mp3"],
   ["2023","songs/2023 & Before/jansport.mp3"],
@@ -720,7 +726,7 @@ function vis(){
     elNpTitle.textContent="PICK A SONG!";elNpSub.innerHTML='<span class="chip navy">PLAY A SONG</span>';
     elNpInit.textContent="V";elNpCat.textContent="";elNpYr.textContent="";
     elNpCover.querySelectorAll("img").forEach(n=>n.remove());elNpInit.style.display="";
-    elTrTitle.textContent="Nothing playing";elTrSub.textContent="STANDBY";
+    elTrTitle.textContent="Nothing playing";elTrSub.textContent="WAITING";
     elTrInitial.textContent="V";elTrCover.querySelectorAll("img").forEach(n=>n.remove());
     elTrCover.querySelector(".ic").style.display="";elTrCover.querySelector(".ic").textContent="V";
     elDlBtn.style.display="none";elDlBtn.href="#";elDlBtn.removeAttribute("download");
@@ -880,21 +886,17 @@ document.addEventListener("DOMContentLoaded",rfl);
 if(document.readyState!=="loading")rfl();
 
 const ANNOUNCEMENT = {
-  enabled: true,                              
-  id: "1",                     
-  windowHours: 12,                           
+  enabled: false,                              
+  id: "mmm",                     
+  windowHours: 0,                           
   startAt: "2026-06-23T00:00:00",             
-  title: "UPDATE",
+  title: "x",
   body: [
-    "fivestarvault was down for about 2 hours due to hosting issues. everythings resolved.",
-    "during the downtime a few songs were added:"
+    "x",
+    "x"
   ],
   songList: [
-    "Swag 3","1250","Comethru","Bangout","Freakbitch","Blackwing",
-    "Butterflymydoors","Buttonmashin","Dieabout","Dust","Feelaway",
-    "Fittedcaps","Muscle","Plastic Hoes","Problematic","Ramadan",
-    "Realestate","Showit","Somuch","Swatteam","Thatsallright",
-    "Thetop","Topshelf"
+    "x",
   ],
 };
 

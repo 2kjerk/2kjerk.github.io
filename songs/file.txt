@@ -1,0 +1,6 @@
+dir: cannot access '/s': No such file or directory
+dir: cannot access '/b': No such file or directory
+dir: cannot access '*.mp3': No such file or directory
+dir: cannot access '*.wav': No such file or directory
+dir: cannot access '*.m4a': No such file or directory
+dir: cannot access '*.flac': No such file or directory
