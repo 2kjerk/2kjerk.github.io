@@ -866,13 +866,8 @@ const RAW=[
   ["xtra","songs/2025/xtra/plaqueboymax.mp3"],
   ["xtra","songs/2025/xtra/yuhhh.mp3"],
 ];
-// urlencode each path segment so spaces / "&" / "(" etc. don't 404 on the server.
-// the raw paths above are human-readable on purpose; this is the only place we encode them.
-function ini(p){return p.split("/").map(s=>encodeURIComponent(s)).join("/");}
 
-// turn a messy filename into something readable.
-// strips the extension + the " V2" version tag, drops the leading track-number prefix ("12 _..._"),
-// swaps the underscores for spaces. tried to keep it forgiving -- file naming in this vault is chaos.
+function ini(p){return p.split("/").map(s=>encodeURIComponent(s)).join("/");}
 function prv(filename){
   let base=filename.replace(/\.(mp3|wav|m4a|flac)$/i,"");
   let ver=null;
@@ -892,16 +887,14 @@ function rlib(title){const m=title.match(/[A-Za-z0-9]/);return m?m[0].toUpperCas
 // basic html escape. anything user-ish (filenames, playlist names) goes through this before innerHTML.
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
-// flatten RAW into real track objects. the cat number is just the 1-based index zero-padded --
-// it shows up as the little tag on the now-playing cover, kind of a fake catalog number thing.
+
 const TRACKS=RAW.map(([projKey,path],i)=>{
   const parts=path.split("/");
   const filename=parts[parts.length-1];
   const{title,ver}=prv(filename);
   const proj=PROJ_BY_KEY[projKey];
   if(!proj){
-    // shouldn't happen normally, but if someone adds a path with a typo'd project key it'd silently
-    // render as "undefined / NaN". bail loud instead so it gets noticed.
+
     console.warn("[vault] track #"+i+" ("+path+") references unknown project key '"+projKey+"' -- skipping project metadata");
   }
   return{id:i,index:i,cat:String(i+1).padStart(3,"0"),title,ver,filename,path,
@@ -1006,7 +999,6 @@ function unp(id,autoplay){
   if(autoplay)audio.play().catch(()=>{});vis();svf();
 }
 function nxt(){
-  // favorites ignore the global shuffle flag -- they always go in the order you set
   if(state.playbackSource==="favorites"){
     if(!state.favorites.length)return null;
     const pos=state.favorites.indexOf(state.currentIndex);
@@ -1281,15 +1273,13 @@ audio.addEventListener("ended",()=>{
   const n=nxt();if(n!=null)unp(n,true);
   else{state.isPlaying=false;elPlayIcon.innerHTML=ICON_PLAY;elFsPlayIcon.innerHTML=ICON_PLAY_LG;svf();}
 });
-// playback blew up (404, corrupt file, the master branch not having it yet...). don't just sit
-// there silently -- log it so it's findable, then skip ahead so listening doesn't dead-stop.
+
 audio.addEventListener("error",()=>{
   if(state.currentIndex==null)return;
   const dead=TRACKS[state.currentIndex];
   console.error("[vault] playback error on track "+(dead?dead.cat:"?")+" -> "+(dead?dead.path:"(unknown)"),audio.error);
   const n=nxt();
   if(n!=null&&n!==state.currentIndex){
-    // tiny delay so the browser doesn't choke on back-to-back src swaps
     setTimeout(()=>unp(n,state.isPlaying||true),120);
   }
 });
@@ -1447,10 +1437,7 @@ function fmt(){
   vctx.fillStyle="#00ff00";vctx.fillRect(0,h-1,w,1);
 }
 window.addEventListener("resize",drvz);
-// -- persistence --
-// everything the user might care about losing (favorites, volume, last song + position, the tab
-// they were on) gets dumped into localStorage on every meaningful state change. the keys are all
-// "vault:" prefixed so they're easy to eyeball in devtools.
+
 function tgl(){
   try{
     localStorage.setItem("vault:vol",String(state.volume));
@@ -1465,14 +1452,12 @@ function tgl(){
       localStorage.setItem("vault:lastT",String(Math.floor(audio.currentTime||0)));
     }
   }catch(e){
-    // most likely cause: storage quota (a user with a million favorites) or private mode.
-    // nothing we can really do except not crash -- the app still works in-memory for the session.
+
     console.warn("[vault] couldn't save state to localStorage:",e);
   }
   window.dispatchEvent(new CustomEvent("vaultStateChanged"));
 }
-// load it all back. this also handles the old playlist-format migration (see the favorites
-// comment) so people don't lose stuff they starred before the favorites rewrite.
+
 function per(){
   try{
     const v=parseFloat(localStorage.getItem("vault:vol"));
@@ -1485,9 +1470,6 @@ function per(){
     if(favs){
       try{state.favorites=JSON.parse(favs);}catch(e){console.warn("[vault] favorites were corrupt, starting fresh",e);state.favorites=[];}
     }else{
-      // --- migration from the old playlist schema ---
-      // v2 stored one playlist-of-tracks at "vault:playlists"; before that it was a bare array
-      // at "vault:playlist". pull the track ids forward into favorites so nothing's lost.
       const pls=localStorage.getItem("vault:playlists");
       if(pls){
         try{const oldPls=JSON.parse(pls);if(Array.isArray(oldPls)&&oldPls.length>0&&oldPls[0].tracks){state.favorites=oldPls[0].tracks;}}catch(e){}
@@ -1502,7 +1484,6 @@ function per(){
     if(src&&src!=="playlist")state.playbackSource=src;else if(src==="playlist")state.playbackSource="favorites";
     const at=localStorage.getItem("vault:activeTab");
     if(at)state.activeTab=at;
-    // restore the last playing track + scrub to where they left off.
     const id=parseInt(localStorage.getItem("vault:lastId"),10);
     const t=parseInt(localStorage.getItem("vault:lastT"),10);
     if(!isNaN(id)&&TRACKS[id]){
@@ -1517,9 +1498,6 @@ function per(){
   }
 }
 audio.addEventListener("timeupdate",tgl);audio.addEventListener("pause",tgl);
-// background duration preloader. loading metadata for every track at once would be a pile of
-// simultaneous requests, so we drip-feed them through a small pool (POOL at a time). each one
-// that resolves fills in its "3:42"-style length on the track row; ones that 404 just get skipped.
 function umi(){
   let i=0;const POOL=3;
   function spln(){
@@ -1551,9 +1529,9 @@ document.addEventListener("DOMContentLoaded",rfl);
 if(document.readyState!=="loading")rfl();
 
 const ANNOUNCEMENT = {
-  enabled: true,                              
-  id: "555",                     
-  windowHours: 2,                           
+  enabled: false,                              
+  id: "5556",                     
+  windowHours: 0,                           
   startAt: "2026-06-23T20:27:00",             
   title: "update",
   body: [
@@ -1640,5 +1618,6 @@ if(shouldShowAnnouncement()){
   }
 }
 </script>
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "93029876a13d4a549ac57721bc0ee348"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
