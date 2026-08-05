@@ -31,6 +31,7 @@ echo waiting...
 echo press ctrl+c to cancel.
 echo.
 
+
 :WAIT_LOOP
 
 for /f "delims=" %%A in ('powershell -command "Get-Date -Format 'M/d/yyyy h:mm tt'"') do set CURRENT=%%A
@@ -62,9 +63,12 @@ cd /d "%SITE_DIR%"
 
 if not exist ".git" (
     git init
-    git branch -M main
-    git remote add origin %REPO%
 )
+
+git branch -M main
+
+git remote remove origin >nul 2>&1
+git remote add origin %REPO%
 
 git add .
 
