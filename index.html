@@ -126,7 +126,13 @@
           <div class="hero-overlay"></div>
           <div class="hero-content">
             <h1 class="hero-title">fivestarvault</h1>
-            <p class="hero-subtitle">we back !</p>
+            <p class="hero-subtitle">updated 8/10/26</p>
+            <div class="hero-actions">
+              <button id="shuffle-all-btn" class="hero-btn hero-btn-primary shuffle-all-btn" title="Shuffle All Songs">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                <span>Shuffle All</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -286,8 +292,23 @@
           <div class="accent-custom-row">
             <label for="accent-custom-input" class="accent-custom-label">Custom color</label>
             <input type="color" id="accent-custom-input" class="accent-custom-input" value="#ff2d7b" aria-label="Custom accent color">
-            <button id="accent-reset-btn" type="button" class="hero-btn hero-btn-ghost accent-reset-btn">Reset to Default</button>
+            <button id="accent-reset-btn" type="button" class="hero-btn hero-btn-ghost accent-reset-btn">Reset</button>
           </div>
+        </div>
+
+        <div class="settings-section">
+          <h2 class="settings-section-title">Equalizer</h2>
+          <p class="settings-section-desc">Boost certain frequncies, ex: bass boosting</p>
+          <p id="eq-unavailable-notice" class="eq-unavailable-notice hidden">Your browser doesn't support this feature.</p>
+
+          <label class="eq-toggle-row">
+            <input type="checkbox" id="eq-enabled" checked>
+            <span>Enable equalizer</span>
+          </label>
+
+          <div id="eq-band-grid" class="eq-band-grid" role="group" aria-label="Equalizer bands"></div>
+
+          <button id="eq-reset-btn" type="button" class="hero-btn hero-btn-ghost eq-reset-btn">Reset</button>
         </div>
       </section>
 
@@ -349,8 +370,68 @@
             <div id="volume-thumb"></div>
           </div>
         </div>
+        <button id="fullscreen-btn" class="bar-ctrl" title="Full Screen (F)">
+          <svg class="icon-fs-enter" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+          <svg class="icon-fs-exit hidden" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+        </button>
       </div>
     </footer>
+
+    <div id="fullscreen-player" class="fs-player hidden">
+      <div class="fs-player-bg">
+        <img id="fs-bg-art" src="" alt="" class="fs-bg-art" aria-hidden="true">
+        <div class="fs-bg-overlay"></div>
+      </div>
+      <button id="fs-close-btn" class="fs-close-btn" aria-label="Close full screen">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="fs-content">
+        <div class="fs-art-wrap">
+          <img id="fs-artwork" src="" alt="Album Art" class="fs-artwork">
+        </div>
+        <div class="fs-info">
+          <div id="fs-title" class="fs-title">Select a track</div>
+          <div id="fs-artist" class="fs-artist">plaqueboymax</div>
+        </div>
+        <div class="fs-timeline">
+          <div id="fs-seek-bar" class="fs-seek" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100">
+            <div id="fs-seek-progress" class="fs-seek-progress"></div>
+            <div id="fs-seek-thumb" class="fs-seek-thumb"></div>
+          </div>
+          <div class="fs-time-row">
+            <span id="fs-current-time" class="fs-time">0:00</span>
+            <span id="fs-total-time" class="fs-time">0:00</span>
+          </div>
+        </div>
+        <div class="fs-controls">
+          <button id="fs-shuffle-btn" class="fs-ctrl-btn" title="Shuffle">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          </button>
+          <button id="fs-prev-btn" class="fs-ctrl-btn" title="Previous">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <button id="fs-play-btn" class="fs-play-btn" title="Play / Pause">
+            <svg class="icon-play" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause hidden" viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <button id="fs-next-btn" class="fs-ctrl-btn" title="Next">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
+          <button id="fs-repeat-btn" class="fs-ctrl-btn" title="Repeat">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            <span class="fs-repeat-badge">1</span>
+          </button>
+        </div>
+        <div class="fs-volume-row">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" class="fs-vol-icon"><path d="M5 9v6h4l5 5V4L9 9H5z"/></svg>
+          <div id="fs-volume-bar" class="fs-volume-bar" role="slider" aria-label="Volume" aria-valuemin="0" aria-valuemax="100">
+            <div id="fs-volume-fill" class="fs-volume-fill"></div>
+            <div id="fs-volume-thumb" class="fs-volume-thumb"></div>
+          </div>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" class="fs-vol-icon"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </div>
+      </div>
+    </div>
 
   </div>
 

@@ -2,6 +2,7 @@ window.Settings = {
   presets: ['#ff2d7b', '#ff3b30', '#ff9500', '#ffd60a', '#34c759', '#0a84ff', '#af52de', '#ff6482'],
   defaultAccent: '#ff2d7b',
   storageKey: 'fsv-accent',
+  eqStorageKey: 'fsv-eq',
 
   init() {
     this.grid = Utils.$('#accent-swatch-grid');
@@ -9,6 +10,7 @@ window.Settings = {
     this.resetBtn = Utils.$('#accent-reset-btn');
 
     this.renderSwatches();
+    this.initEq();
 
     let saved = null;
     try { saved = localStorage.getItem(this.storageKey); } catch (e) {}
@@ -26,6 +28,154 @@ window.Settings = {
         this.applyAccent(this.defaultAccent, true);
       });
     }
+  },
+
+  initEq() {
+    this.eqGrid = Utils.$('#eq-band-grid');
+    this.eqEnabledInput = Utils.$('#eq-enabled');
+    this.eqResetBtn = Utils.$('#eq-reset-btn');
+    this.eqUnavailableNotice = Utils.$('#eq-unavailable-notice');
+
+    this.renderEqBands();
+
+    const saved = this.loadEqSettings();
+    Player.applyEqSettings(saved);
+    this.syncEqUI(saved);
+
+    if (!Player.eqAvailable) {
+      if (this.eqUnavailableNotice) Utils.show(this.eqUnavailableNotice);
+      this.syncEqDisabledState(true);
+    }
+
+    if (this.eqEnabledInput) {
+      this.eqEnabledInput.addEventListener('change', () => {
+        if (!Player.eqAvailable) return;
+        Player.setEqEnabled(this.eqEnabledInput.checked);
+        this.saveEqSettings(Player.getEqSettings());
+        this.syncEqDisabledState();
+      });
+    }
+
+    if (this.eqResetBtn) {
+      this.eqResetBtn.addEventListener('click', () => {
+        if (!Player.eqAvailable) return;
+        Player.resetEq();
+        this.syncEqUI(Player.getEqSettings());
+        this.saveEqSettings(Player.getEqSettings());
+      });
+    }
+  },
+
+  renderEqBands() {
+    if (!this.eqGrid) return;
+    this.eqGrid.innerHTML = '';
+
+    Player.eqBands.forEach((band, index) => {
+      const bandEl = document.createElement('div');
+      bandEl.className = 'eq-band';
+
+      const valueEl = document.createElement('span');
+      valueEl.className = 'eq-band-value';
+      valueEl.id = `eq-band-value-${index}`;
+      valueEl.textContent = '0 dB';
+
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.className = 'eq-band-slider';
+      slider.id = `eq-band-${index}`;
+      slider.min = String(Player.eqMinDb);
+      slider.max = String(Player.eqMaxDb);
+      slider.step = '1';
+      slider.value = '0';
+      slider.setAttribute('aria-label', `${band.label} Hz band`);
+      slider.setAttribute('aria-valuemin', String(Player.eqMinDb));
+      slider.setAttribute('aria-valuemax', String(Player.eqMaxDb));
+      slider.setAttribute('aria-valuenow', '0');
+
+      slider.addEventListener('input', () => {
+        if (!Player.eqAvailable) return;
+        const gain = parseFloat(slider.value);
+        Player.ensureAudioReady();
+        Player.setEqBand(index, gain);
+        valueEl.textContent = this.formatEqGain(gain);
+        slider.setAttribute('aria-valuenow', String(gain));
+        this.saveEqSettings(Player.getEqSettings());
+      });
+
+      const label = document.createElement('span');
+      label.className = 'eq-band-label';
+      label.textContent = band.label;
+
+      bandEl.appendChild(valueEl);
+      bandEl.appendChild(slider);
+      bandEl.appendChild(label);
+      this.eqGrid.appendChild(bandEl);
+    });
+  },
+
+  loadEqSettings() {
+    const defaults = {
+      enabled: true,
+      gains: Player.eqBands.map(() => 0)
+    };
+
+    try {
+      const raw = localStorage.getItem(this.eqStorageKey);
+      if (!raw) return defaults;
+
+      const parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.gains)) return defaults;
+
+      return {
+        enabled: parsed.enabled !== false,
+        gains: Player.eqBands.map((_, i) => {
+          const gain = parsed.gains[i];
+          if (typeof gain !== 'number' || Number.isNaN(gain)) return 0;
+          return Math.max(Player.eqMinDb, Math.min(Player.eqMaxDb, gain));
+        })
+      };
+    } catch (e) {
+      return defaults;
+    }
+  },
+
+  saveEqSettings(settings) {
+    try {
+      localStorage.setItem(this.eqStorageKey, JSON.stringify(settings));
+    } catch (e) {}
+  },
+
+  syncEqUI(settings) {
+    if (this.eqEnabledInput) {
+      this.eqEnabledInput.checked = settings.enabled;
+    }
+
+    settings.gains.forEach((gain, index) => {
+      const slider = Utils.$(`#eq-band-${index}`);
+      const valueEl = Utils.$(`#eq-band-value-${index}`);
+      if (slider) {
+        slider.value = String(gain);
+        slider.setAttribute('aria-valuenow', String(gain));
+      }
+      if (valueEl) valueEl.textContent = this.formatEqGain(gain);
+    });
+
+    this.syncEqDisabledState();
+  },
+
+  syncEqDisabledState(forceDisabled) {
+    const disabled = forceDisabled || !Player.eqAvailable || (this.eqEnabledInput && !this.eqEnabledInput.checked);
+    if (this.eqGrid) this.eqGrid.classList.toggle('eq-disabled', disabled);
+    Utils.$$('.eq-band-slider').forEach(slider => {
+      slider.disabled = disabled;
+    });
+    if (this.eqEnabledInput) this.eqEnabledInput.disabled = !Player.eqAvailable;
+    if (this.eqResetBtn) this.eqResetBtn.disabled = !Player.eqAvailable;
+  },
+
+  formatEqGain(gain) {
+    const rounded = Math.round(gain);
+    return rounded > 0 ? `+${rounded} dB` : `${rounded} dB`;
   },
 
   isValidHex(hex) {

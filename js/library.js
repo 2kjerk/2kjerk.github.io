@@ -5,7 +5,7 @@ const MUSIC_LIBRARY = [
     folder: '2023 & Before',
     cover: 'music/2023.webp',
     coverFallback: 'music/2023 & Before/Folder.jpg',
-    durationText: '28 songs • 1 hr 14 min',
+    durationText: '',
     tracks: [
       { title: 'backofdacoupe', src: 'music/2023 & Before/backofdacoupe.mp3' },
       { title: 'backwoods', src: 'music/2023 & Before/backwoods.mp3' },
@@ -43,7 +43,7 @@ const MUSIC_LIBRARY = [
     folder: '2024',
     cover: 'music/2024.webp',
     coverFallback: null,
-    durationText: '68 songs • 3 hr 12 min',
+    durationText: '',
     tracks: [
       { title: 'seasick (alt)', src: 'music/2024/seasick (alt).mp3' },
       { title: '1250', src: 'music/2024/1250.mp3' },
@@ -122,8 +122,10 @@ const MUSIC_LIBRARY = [
     folder: '2026',
     cover: 'music/2026.jpg',
     coverFallback: null,
-    durationText: '28 songs • 1 hr 22 min',
+    durationText: '',
     tracks: [
+      { title: 'how you feel?', src: 'music/2026/how you feel.mp3' },
+      { title: 'lost love', src: 'music/2026/lost love.mp3' },
       { title: 'actthatway', src: 'music/2026/actthatway.mp3' },
       { title: 'ballikeai', src: 'music/2026/ballikeai.mp3' },
       { title: 'bankrupt', src: 'music/2026/bankrupt.mp3' },
@@ -160,7 +162,7 @@ const MUSIC_LIBRARY = [
     folder: 'break',
     cover: 'music/break.webp',
     coverFallback: 'music/break/Folder.jpg',
-    durationText: '12 songs • 44 min',
+    durationText: '',
     tracks: [
       { title: 'ACTING OUT', src: 'music/break/ACTING OUT.mp3' },
       { title: 'FATBOYZ', src: 'music/break/FATBOYZ.mp3' },
@@ -182,7 +184,7 @@ const MUSIC_LIBRARY = [
     folder: 'fiveforever v1',
     cover: 'music/fiveforever v1/! cover.jpg',
     coverFallback: 'music/fiveforever v1/Folder.jpg',
-    durationText: '14 songs • 52 min',
+    durationText: '',
     tracks: [
       { title: 'birdsdontflyaway', src: 'music/fiveforever v1/01 _birdsdontflyaway_ V1.mp3' },
       { title: 'cmb', src: 'music/fiveforever v1/02 _cmb_ V1.mp3' },
@@ -206,7 +208,7 @@ const MUSIC_LIBRARY = [
     folder: 'newcrib',
     cover: 'music/newcrib.jpg',
     coverFallback: 'music/newcrib/Folder.jpg',
-    durationText: '13 songs • 46 min',
+    durationText: '',
     tracks: [
       { title: 'hatinahhhh', src: 'music/newcrib/13 _hatinahhhh_ V1.mp3' },
       { title: 'pacifier', src: 'music/newcrib/26 _pacifier_ V1.mp3' },
@@ -229,7 +231,7 @@ const MUSIC_LIBRARY = [
     folder: 'pbm2025',
     cover: 'music/pbm2025.webp',
     coverFallback: null,
-    durationText: '36 songs • 1 hr 48 min',
+    durationText: '',
     tracks: [
       { title: 'rockstar', src: 'music/pbm2025/01 _rockstar_ V1.mp3' },
       { title: 'scream', src: 'music/pbm2025/02 _scream_ V1.mp3' },
@@ -274,8 +276,9 @@ const MUSIC_LIBRARY = [
     folder: 'prince',
     cover: 'music/prince.png',
     coverFallback: null,
-    durationText: '5 songs • 18 min',
+    durationText: '',
     tracks: [
+      { title: 'rip lil peep', src: 'music/prince/riplilpeep.mp3' },
       { title: 'battleofthebands', src: 'music/prince/battleofthebands.mp3' },
       { title: 'hesi', src: 'music/prince/hesi.mp3' },
       { title: 'howtf', src: 'music/prince/howtf.mp3' },
@@ -289,7 +292,7 @@ const MUSIC_LIBRARY = [
     folder: 'untitled project',
     cover: 'music/untitled.png',
     coverFallback: 'music/untitled project/Folder.jpg',
-    durationText: '4 songs • 16 min',
+    durationText: '',
     tracks: [
       { title: '3or2', src: 'music/untitled project/3or2.mp3' },
       { title: 'beenhadswagnigguhhhh', src: 'music/untitled project/beenhadswagnigguhhhh.mp3' },
@@ -303,7 +306,7 @@ const MUSIC_LIBRARY = [
     folder: 'xtra',
     cover: 'music/xtra.webp',
     coverFallback: 'music/xtra/Folder.jpg',
-    durationText: '6 songs • 24 min',
+    durationText: '',
     tracks: [
       { title: 'badbusiness', src: 'music/xtra/badbusiness.mp3' },
       { title: 'deadniggasmakeitfeelshort', src: 'music/xtra/deadniggasmakeitfeelshort.mp3' },

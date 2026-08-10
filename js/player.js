@@ -1,6 +1,24 @@
 window.Player = {
   audio: new Audio(),
 
+  eqBands: [
+    { freq: 60, label: '60' },
+    { freq: 230, label: '230' },
+    { freq: 910, label: '910' },
+    { freq: 3600, label: '3.6k' },
+    { freq: 14000, label: '14k' }
+  ],
+  eqGains: [0, 0, 0, 0, 0],
+  eqEnabled: true,
+  eqMinDb: -12,
+  eqMaxDb: 12,
+
+  audioContext: null,
+  sourceNode: null,
+  eqFilters: [],
+  _audioGraphReady: false,
+  eqAvailable: false,
+
   currentProject: null,
   currentTrackIdx: -1,
   playlist: [],
@@ -12,6 +30,7 @@ window.Player = {
   volume: 1,
   isMuted: false,
   isLoading: false,
+  isAllShuffle: false,
 
   onTrackChange: null,
   onPlayStateChange: null,
@@ -59,9 +78,107 @@ window.Player = {
       this.setLoading(false);
     });
 
+    this.eqAvailable = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+
     this.updateVolumeUI();
     this.updateRepeatUI();
     this.updateShuffleUI();
+  },
+
+  initAudioGraph() {
+    if (this._audioGraphReady || !this.eqAvailable) return false;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return false;
+
+      this.audioContext = new AudioCtx();
+      this.sourceNode = this.audioContext.createMediaElementSource(this.audio);
+      this.eqFilters = this.eqBands.map((band) => {
+        const filter = this.audioContext.createBiquadFilter();
+        filter.type = 'peaking';
+        filter.frequency.value = band.freq;
+        filter.Q.value = 1.4;
+        filter.gain.value = 0;
+        return filter;
+      });
+
+      let node = this.sourceNode;
+      this.eqFilters.forEach((filter) => {
+        node.connect(filter);
+        node = filter;
+      });
+      node.connect(this.audioContext.destination);
+
+      this.eqBands.forEach((_, i) => {
+        if (this.eqFilters[i]) {
+          this.eqFilters[i].gain.value = this.eqEnabled ? this.eqGains[i] : 0;
+        }
+      });
+
+      this._audioGraphReady = true;
+      return true;
+    } catch (e) {
+      console.warn('Web Audio EQ unavailable:', e);
+      return false;
+    }
+  },
+
+  ensureAudioReady() {
+    if (!this.eqAvailable) return Promise.resolve();
+    this.initAudioGraph();
+    if (!this.audioContext) return Promise.resolve();
+    if (this.audioContext.state === 'running') return Promise.resolve();
+    return this.audioContext.resume().catch(() => {});
+  },
+
+  playAudio() {
+    if (!this.eqAvailable) return this.audio.play();
+    return this.ensureAudioReady().then(() => this.audio.play());
+  },
+
+  setEqBand(index, gainDb) {
+    if (index < 0 || index >= this.eqBands.length) return;
+    const clamped = Math.max(this.eqMinDb, Math.min(this.eqMaxDb, gainDb));
+    this.eqGains[index] = clamped;
+    if (this.eqFilters[index] && this.eqEnabled) {
+      this.eqFilters[index].gain.value = clamped;
+    }
+  },
+
+  setEqEnabled(enabled) {
+    this.eqEnabled = enabled;
+    this.eqBands.forEach((_, i) => {
+      if (this.eqFilters[i]) {
+        this.eqFilters[i].gain.value = enabled ? this.eqGains[i] : 0;
+      }
+    });
+  },
+
+  applyEqSettings(settings) {
+    if (!settings) return;
+    if (typeof settings.enabled === 'boolean') this.eqEnabled = settings.enabled;
+    if (Array.isArray(settings.gains)) {
+      settings.gains.forEach((gain, i) => {
+        if (typeof gain === 'number') this.eqGains[i] = Math.max(this.eqMinDb, Math.min(this.eqMaxDb, gain));
+      });
+    }
+    this.eqBands.forEach((_, i) => {
+      if (this.eqFilters[i]) {
+        this.eqFilters[i].gain.value = this.eqEnabled ? this.eqGains[i] : 0;
+      }
+    });
+  },
+
+  getEqSettings() {
+    return {
+      enabled: this.eqEnabled,
+      gains: [...this.eqGains]
+    };
+  },
+
+  resetEq() {
+    this.eqGains = this.eqBands.map(() => 0);
+    this.setEqEnabled(this.eqEnabled);
   },
 
   setLoading(isLoading) {
@@ -78,7 +195,8 @@ window.Player = {
     this.currentProject = project;
     this.currentTrackIdx = trackIdx;
 
-    if (projectChanged) {
+    if (projectChanged || this.isAllShuffle) {
+      this.isAllShuffle = false;
       this.buildPlaylist(projectId);
     }
 
@@ -88,7 +206,7 @@ window.Player = {
 
     const track = project.tracks[trackIdx];
     this.audio.src = track.src;
-    this.audio.play().catch(err => console.warn('Play interrupted:', err));
+    this.playAudio().catch(err => console.warn('Play interrupted:', err));
 
     const playerBar = Utils.$('#player-bar');
     if (playerBar) playerBar.classList.remove('player-hidden');
@@ -104,7 +222,7 @@ window.Player = {
     if (this.isPlaying) {
       this.audio.pause();
     } else {
-      this.audio.play().catch(err => console.warn(err));
+      this.playAudio().catch(err => console.warn(err));
     }
   },
 
@@ -138,12 +256,17 @@ window.Player = {
     const nextItem = (isShuffle ? this.shuffledPlaylist : this.playlist)[nextPos];
     if (!nextItem) return;
 
+    if (this.isAllShuffle && nextItem.projectId) {
+      const nextProject = getProject(nextItem.projectId);
+      if (nextProject) this.currentProject = nextProject;
+    }
+
     this.currentTrackIdx = nextItem.trackIdx;
     const track = this.currentProject.tracks[nextItem.trackIdx];
     if (!track) return;
 
     this.audio.src = track.src;
-    this.audio.play().catch(err => console.warn('Play interrupted:', err));
+    this.playAudio().catch(err => console.warn('Play interrupted:', err));
 
     this.updateNowPlayingInfo();
     if (this.onTrackChange) this.onTrackChange(nextItem.projectId, nextItem.trackIdx);
@@ -170,12 +293,17 @@ window.Player = {
     const prevItem = activeList[prevPos];
     if (!prevItem) return;
 
+    if (this.isAllShuffle && prevItem.projectId) {
+      const prevProject = getProject(prevItem.projectId);
+      if (prevProject) this.currentProject = prevProject;
+    }
+
     this.currentTrackIdx = prevItem.trackIdx;
     const track = this.currentProject.tracks[prevItem.trackIdx];
     if (!track) return;
 
     this.audio.src = track.src;
-    this.audio.play().catch(err => console.warn('Play interrupted:', err));
+    this.playAudio().catch(err => console.warn('Play interrupted:', err));
 
     this.updateNowPlayingInfo();
     if (this.onTrackChange) this.onTrackChange(prevItem.projectId, prevItem.trackIdx);
@@ -184,7 +312,7 @@ window.Player = {
   handleTrackEnded() {
     if (this.repeatMode === 'one') {
       this.audio.currentTime = 0;
-      this.audio.play().catch(err => console.warn(err));
+      this.playAudio().catch(err => console.warn(err));
     } else {
       this.playNext();
     }
@@ -262,6 +390,53 @@ window.Player = {
     this.shuffledPlaylist = list;
   },
 
+  buildAllProjectsPlaylist() {
+    this.playlist = [];
+    MUSIC_LIBRARY.forEach(project => {
+      project.tracks.forEach((track, idx) => {
+        this.playlist.push({
+          projectId: project.id,
+          trackIdx: idx,
+          track: track
+        });
+      });
+    });
+    if (this.shuffleOn) {
+      this.buildShuffledPlaylist();
+    }
+  },
+
+  shuffleAll() {
+    this.buildAllProjectsPlaylist();
+    this.shuffleOn = true;
+    try { localStorage.setItem('fsv-shuffle', 'true'); } catch (e) {}
+    this.buildShuffledPlaylist();
+    this.updateShuffleUI();
+    
+    const first = this.shuffledPlaylist[0];
+    if (!first) return;
+    
+    const project = getProject(first.projectId);
+    if (!project) return;
+    
+    this.currentProject = project;
+    this.currentTrackIdx = first.trackIdx;
+    this.queuePos = 0;
+    this.isAllShuffle = true;
+    
+    const track = project.tracks[first.trackIdx];
+    this.audio.src = track.src;
+    this.playAudio().catch(err => console.warn('Play interrupted:', err));
+    
+    const playerBar = Utils.$('#player-bar');
+    if (playerBar) playerBar.classList.remove('player-hidden');
+    const appEl = Utils.$('#app');
+    if (appEl) appEl.classList.add('player-active');
+    
+    this.updateNowPlayingInfo();
+    if (this.onTrackChange) this.onTrackChange(first.projectId, first.trackIdx);
+  },
+
   updateTimeUI() {
     const currTime = Utils.$('#current-time');
     const totTime = Utils.$('#total-time');
@@ -284,6 +459,18 @@ window.Player = {
         seekBar.setAttribute('aria-valuenow', Math.round(pct));
         seekBar.setAttribute('aria-valuetext', `${formattedCurr} of ${formattedTot}`);
       }
+    }
+
+    const fsCurrTime = Utils.$('#fs-current-time');
+    const fsTotTime = Utils.$('#fs-total-time');
+    const fsSeekProgress = Utils.$('#fs-seek-progress');
+    const fsSeekThumb = Utils.$('#fs-seek-thumb');
+    if (fsCurrTime) fsCurrTime.textContent = formattedCurr;
+    if (fsTotTime) fsTotTime.textContent = formattedTot;
+    if (this.audio.duration) {
+      const pct = (this.audio.currentTime / this.audio.duration) * 100;
+      if (fsSeekProgress) fsSeekProgress.style.width = `${pct}%`;
+      if (fsSeekThumb) fsSeekThumb.style.left = `${pct}%`;
     }
   },
 
@@ -319,6 +506,36 @@ window.Player = {
       artEl.src = Utils.getCoverUrl(this.currentProject);
       artEl.onerror = () => { artEl.src = Utils.getCoverUrl(null); };
     }
+    this.updateFullscreenInfo();
+  },
+
+  updateFullscreenInfo() {
+    if (!this.currentProject || this.currentTrackIdx === -1) return;
+    const track = this.currentProject.tracks[this.currentTrackIdx];
+    const fsTitle = Utils.$('#fs-title');
+    const fsArtist = Utils.$('#fs-artist');
+    const fsArt = Utils.$('#fs-artwork');
+    const fsBgArt = Utils.$('#fs-bg-art');
+    
+    if (fsTitle) fsTitle.textContent = Utils.displayTitle(track.title);
+    if (fsArtist) fsArtist.textContent = this.currentProject.title;
+    const coverUrl = Utils.getCoverUrl(this.currentProject);
+    if (fsArt) { fsArt.src = coverUrl; fsArt.onerror = () => { fsArt.src = Utils.getCoverUrl(null); }; }
+    if (fsBgArt) { fsBgArt.src = coverUrl; fsBgArt.onerror = () => { fsBgArt.src = Utils.getCoverUrl(null); }; }
+    
+    const fsShuffleBtn = Utils.$('#fs-shuffle-btn');
+    const fsRepeatBtn = Utils.$('#fs-repeat-btn');
+    const fsRepeatBadge = Utils.$('.fs-repeat-badge');
+    if (fsShuffleBtn) fsShuffleBtn.classList.toggle('active', this.shuffleOn);
+    if (fsRepeatBtn) fsRepeatBtn.classList.toggle('active', this.repeatMode !== 'off');
+    if (fsRepeatBadge) fsRepeatBadge.classList.toggle('is-visible', this.repeatMode !== 'off');
+    
+    const fsFill = Utils.$('#fs-volume-fill');
+    const fsThumb = Utils.$('#fs-volume-thumb');
+    const effectiveVol = this.isMuted ? 0 : this.volume;
+    const pct = effectiveVol * 100;
+    if (fsFill) fsFill.style.width = `${pct}%`;
+    if (fsThumb) fsThumb.style.left = `${pct}%`;
   },
 
   updateVolumeUI() {
@@ -351,6 +568,11 @@ window.Player = {
     if (high) high.classList.toggle('hidden', showMute || showLow);
     if (low) low.classList.toggle('hidden', !showLow);
     if (mute) mute.classList.toggle('hidden', !showMute);
+
+    const fsFill = Utils.$('#fs-volume-fill');
+    const fsThumb = Utils.$('#fs-volume-thumb');
+    if (fsFill) fsFill.style.width = `${pct}%`;
+    if (fsThumb) fsThumb.style.left = `${pct}%`;
   },
 
   updateRepeatUI() {
@@ -363,6 +585,10 @@ window.Player = {
     btn.title = active ? 'Repeat One is on (R)' : 'Repeat (R)';
 
     if (badge) badge.classList.toggle('is-visible', active);
+    const fsRepeatBtn = Utils.$('#fs-repeat-btn');
+    const fsBadge = Utils.$('.fs-repeat-badge');
+    if (fsRepeatBtn) fsRepeatBtn.classList.toggle('active', active);
+    if (fsBadge) fsBadge.classList.toggle('is-visible', active);
   },
 
   updateShuffleUI() {
@@ -370,5 +596,7 @@ window.Player = {
     if (!btn) return;
     if (this.shuffleOn) btn.classList.add('active');
     else btn.classList.remove('active');
+    const fsShuffleBtn = Utils.$('#fs-shuffle-btn');
+    if (fsShuffleBtn) fsShuffleBtn.classList.toggle('active', this.shuffleOn);
   }
 };

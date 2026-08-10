@@ -33,6 +33,13 @@ window.App = {
       });
     }
 
+    const shuffleAllBtn = Utils.$('#shuffle-all-btn');
+    if (shuffleAllBtn) {
+      shuffleAllBtn.addEventListener('click', () => {
+        Player.shuffleAll();
+      });
+    }
+
     Utils.$$('#play-btn').forEach(btn => btn.addEventListener('click', () => Player.togglePlay()));
     Utils.$$('#prev-btn').forEach(btn => btn.addEventListener('click', () => Player.playPrev()));
     Utils.$$('#next-btn').forEach(btn => btn.addEventListener('click', () => Player.playNext(true)));
@@ -49,6 +56,7 @@ window.App = {
     this.setupKeyboardShortcuts();
     this.setupMobileNavigation();
     this.setupBugModal();
+    this.setupFullscreenPlayer();
 
     Sidebar.showHome();
 
@@ -249,6 +257,13 @@ window.App = {
         case 'r':
           Player.setRepeatMode(Player.repeatMode === 'off' ? 'one' : 'off');
           break;
+        case 'f':
+          if (this._fsPlayer && !this._fsPlayer.classList.contains('hidden')) {
+            this._closeFullscreen();
+          } else if (this._openFullscreen) {
+            this._openFullscreen();
+          }
+          break;
       }
     });
   },
@@ -280,6 +295,76 @@ window.App = {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close();
     });
+  },
+
+  setupFullscreenPlayer() {
+    const fsPlayer = Utils.$('#fullscreen-player');
+    const fsBtn = Utils.$('#fullscreen-btn');
+    const fsCloseBtn = Utils.$('#fs-close-btn');
+    if (!fsPlayer || !fsBtn) return;
+
+    const openFs = () => {
+      if (!Player.audio.src) return;
+      Player.updateFullscreenInfo();
+      Utils.show(fsPlayer);
+      requestAnimationFrame(() => fsPlayer.classList.add('fs-player-open'));
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeFs = () => {
+      fsPlayer.classList.remove('fs-player-open');
+      setTimeout(() => {
+        Utils.hide(fsPlayer);
+        document.body.style.overflow = '';
+      }, 400);
+    };
+
+    fsBtn.addEventListener('click', openFs);
+    if (fsCloseBtn) fsCloseBtn.addEventListener('click', closeFs);
+
+    const barLeft = Utils.$('.bar-left');
+    if (barLeft) {
+      barLeft.style.cursor = 'pointer';
+      barLeft.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A') openFs();
+      });
+    }
+
+    const fsPlayBtn = Utils.$('#fs-play-btn');
+    if (fsPlayBtn) fsPlayBtn.addEventListener('click', () => Player.togglePlay());
+
+    const fsPrevBtn = Utils.$('#fs-prev-btn');
+    const fsNextBtn = Utils.$('#fs-next-btn');
+    if (fsPrevBtn) fsPrevBtn.addEventListener('click', () => Player.playPrev());
+    if (fsNextBtn) fsNextBtn.addEventListener('click', () => Player.playNext(true));
+
+    const fsShuffleBtn = Utils.$('#fs-shuffle-btn');
+    if (fsShuffleBtn) fsShuffleBtn.addEventListener('click', () => Player.toggleShuffle());
+
+    const fsRepeatBtn = Utils.$('#fs-repeat-btn');
+    if (fsRepeatBtn) fsRepeatBtn.addEventListener('click', () => {
+      Player.setRepeatMode(Player.repeatMode === 'off' ? 'one' : 'off');
+    });
+
+    const fsSeekBar = Utils.$('#fs-seek-bar');
+    if (fsSeekBar) {
+      this._setupSlider(fsSeekBar, (fraction) => Player.seekTo(fraction));
+    }
+
+    const fsVolumeBar = Utils.$('#fs-volume-bar');
+    if (fsVolumeBar) {
+      this._setupSlider(fsVolumeBar, (fraction) => Player.setVolume(fraction));
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !fsPlayer.classList.contains('hidden')) {
+        closeFs();
+      }
+    });
+
+    this._openFullscreen = openFs;
+    this._closeFullscreen = closeFs;
+    this._fsPlayer = fsPlayer;
   },
 
   setupBugModal() {
