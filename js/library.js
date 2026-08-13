@@ -145,7 +145,7 @@ const MUSIC_LIBRARY = [
       { title: 'nosebleeds', src: 'music/2026/nosebleeds.mp3' },
       { title: 'onarun', src: 'music/2026/onarun.mp3' },
       { title: 'outoftouch', src: 'music/2026/outoftouch.mp3' },
-      { title: 'ouu shit', src: 'music/2026/ouu shit.mp3' },
+      { title: 'ouu shit', src: 'music/2026/ouushitfull.mp3' },
       { title: 'plaqueboybieber remaster (ai)', src: 'music/2026/plaqueboybieber remaster (ai).mp3' },
       { title: 'president', src: 'music/2026/president.mp3' },
       { title: 'shakemydreads', src: 'music/2026/shakemydreads.mp3' },
