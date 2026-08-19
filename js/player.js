@@ -83,6 +83,112 @@ window.Player = {
     this.updateVolumeUI();
     this.updateRepeatUI();
     this.updateShuffleUI();
+
+    this.initMediaSession();
+    this.initBackgroundResume();
+  },
+
+
+  initBackgroundResume() {
+    const resume = () => {
+      if (this.audioContext && this.audioContext.state === 'suspended' && this.isPlaying) {
+        this.audioContext.resume().catch(() => {});
+      }
+    };
+
+    document.addEventListener('visibilitychange', resume);
+    window.addEventListener('pageshow', resume);
+    window.addEventListener('focus', resume);
+  },
+
+
+  initMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.setActionHandler('play', () => this.playAudio().catch(() => {}));
+    navigator.mediaSession.setActionHandler('pause', () => this.audio.pause());
+    navigator.mediaSession.setActionHandler('previoustrack', () => this.playPrev());
+    navigator.mediaSession.setActionHandler('nexttrack', () => this.playNext(true));
+
+    try {
+      navigator.mediaSession.setActionHandler('seekto', null);
+    } catch (e) {}
+
+    this.audio.addEventListener('play', () => {
+      navigator.mediaSession.playbackState = 'playing';
+      this.updatePositionState();
+    });
+    this.audio.addEventListener('pause', () => {
+      navigator.mediaSession.playbackState = 'paused';
+      this.updatePositionState();
+    });
+    this.audio.addEventListener('seeked', () => this.updatePositionState());
+    this.audio.addEventListener('durationchange', () => this.updatePositionState());
+  },
+
+
+  updatePositionState() {
+    if (!('mediaSession' in navigator) || !('setPositionState' in navigator.mediaSession)) return;
+    const duration = this.audio.duration;
+    if (!duration || !isFinite(duration)) return;
+    try {
+      navigator.mediaSession.setPositionState({
+        duration,
+        playbackRate: this.audio.playbackRate || 1,
+        position: Math.min(this.audio.currentTime, duration)
+      });
+    } catch (e) {}
+  },
+
+  updateMediaSessionMetadata() {
+    if (!('mediaSession' in navigator) || !this.currentProject || this.currentTrackIdx === -1) return;
+    const track = this.currentProject.tracks[this.currentTrackIdx];
+    const artwork = this.getMediaSessionArtworkUrl(this.currentProject);
+    const resolvedArtwork = artwork ? this.resolveUrl(artwork) : null;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: Utils.displayTitle(track.title),
+      artist: this.currentProject.title,
+      album: this.currentProject.title,
+      artwork: resolvedArtwork ? [
+        { src: resolvedArtwork, sizes: '512x512', type: this.getImageMimeType(artwork) }
+      ] : []
+    });
+  },
+
+  resolveUrl(path) {
+    if (path.startsWith('data:')) return path;
+    try {
+      return new URL(path, document.baseURI).href;
+    } catch (e) {
+      return encodeURI(path);
+    }
+  },
+
+
+  getMediaSessionArtworkUrl(project) {
+    if (!project) return Utils.getCoverUrl(null);
+    const isRasterSafe = (url) => /\.(jpe?g|png)$/i.test(url.split('?')[0]);
+    if (project.cover && isRasterSafe(project.cover)) return project.cover;
+    if (project.coverFallback && isRasterSafe(project.coverFallback)) return project.coverFallback;
+    return Utils.getCoverUrl(project);
+  },
+
+  getImageMimeType(url) {
+    if (url.startsWith('data:')) {
+      const match = url.match(/^data:([^;,]+)/);
+      if (match) return match[1];
+    }
+    const ext = url.split('?')[0].split('.').pop().toLowerCase();
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg': return 'image/jpeg';
+      case 'png': return 'image/png';
+      case 'webp': return 'image/webp';
+      case 'gif': return 'image/gif';
+      case 'svg': return 'image/svg+xml';
+      default: return 'image/png';
+    }
   },
 
   initAudioGraph() {
@@ -319,9 +425,21 @@ window.Player = {
   },
 
   seekTo(fraction) {
-    if (this.audio.duration) {
-      this.audio.currentTime = fraction * this.audio.duration;
+    if (!this.audio.duration) return;
+    const targetTime = fraction * this.audio.duration;
+
+    const usesAudioGraph = this._audioGraphReady;
+    const wasPlaying = !this.audio.paused;
+
+    if (usesAudioGraph && wasPlaying) {
+      this.audio.pause();
+      this.audio.currentTime = targetTime;
+      this.playAudio().catch(err => console.warn('Play interrupted:', err));
+    } else {
+      this.audio.currentTime = targetTime;
     }
+
+    this.updatePositionState();
   },
 
   setVolume(fraction) {
@@ -507,6 +625,7 @@ window.Player = {
       artEl.onerror = () => { artEl.src = Utils.getCoverUrl(null); };
     }
     this.updateFullscreenInfo();
+    this.updateMediaSessionMetadata();
   },
 
   updateFullscreenInfo() {
