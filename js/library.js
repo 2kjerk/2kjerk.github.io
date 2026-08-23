@@ -141,7 +141,7 @@ const MUSIC_LIBRARY = [
       { title: 'issa issa', src: 'music/2026/issa issa.mp3' },
       { title: 'jimihendrix', src: 'music/2026/jimihendrix.mp3' },
       { title: 'machete', src: 'music/2026/machete.mp3' },
-      { title: 'makeherfamous', src: 'music/2026/makeherfamous.mp3' },
+      { title: 'makeherfamous', src: 'music/2026/makeherfamous remaster.mp3' },
       { title: 'nosebleeds', src: 'music/2026/nosebleeds.mp3' },
       { title: 'onarun', src: 'music/2026/onarun.mp3' },
       { title: 'outoftouch', src: 'music/2026/outoftouch.mp3' },
