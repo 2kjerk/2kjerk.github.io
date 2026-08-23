@@ -164,6 +164,7 @@ const MUSIC_LIBRARY = [
     coverFallback: 'music/break/Folder.jpg',
     durationText: '',
     tracks: [
+      { title: 'HOW IT GO', src: 'music/break/howitgo.mp3' },
       { title: 'ACTING OUT', src: 'music/break/ACTING OUT.mp3' },
       { title: 'FATBOYZ', src: 'music/break/FATBOYZ.mp3' },
       { title: 'FIVESTARFILM', src: 'music/break/FIVESTARFILM.mp3' },
