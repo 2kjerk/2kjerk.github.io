@@ -124,7 +124,7 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
-      { title: 'LOST IT', src: 'music/2026/LOST IT REMASTER V1.3.mp3' },
+      { title: 'LOST IT (remaster)', src: 'music/2026/LOST IT REMASTER V1.3.mp3' },
       { title: 'how you feel?', src: 'music/2026/how you feel.mp3' },
       { title: 'lost love', src: 'music/2026/lost love.mp3' },
       { title: 'actthatway', src: 'music/2026/actthatway.mp3' },
