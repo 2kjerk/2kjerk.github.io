@@ -14,6 +14,12 @@ window.Footage = {
     },
     {
       type: 'youtube',
+      youtubeId: '7UFWjM8HqnE',
+      title: 'muzzle session',
+      description: 'Studio session'
+    },
+    {
+      type: 'youtube',
       youtubeId: 'yz9T4WTyoiI',
       title: 'die about session',
       description: 'Studio session'
