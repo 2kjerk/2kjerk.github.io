@@ -124,7 +124,7 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
-      { title: 'WAKE UP ft. tezzus', src: 'music/2026/oh my god ft tezzus.mp3' },
+      { title: 'OH MY GOD ft. tezzus', src: 'music/2026/oh my god ft tezzus.mp3' },
       { title: 'WAKE UP ft. tezzus', src: 'music/2026/wake up ft tezzus.mp3' },
       { title: 'LOST IT (remaster)', src: 'music/2026/LOST IT REMASTER V1.3.mp3' },
       { title: 'how you feel?', src: 'music/2026/how you feel.mp3' },
