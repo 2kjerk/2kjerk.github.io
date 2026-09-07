@@ -124,6 +124,7 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
+      { title: 'ITS A VIBE', src: 'music/2026/ITS A VIBE.mp3' },
       { title: 'OH MY GOD w/ tezzus', src: 'music/2026/oh my god ft tezzus.mp3' },
       { title: 'WAKE UP w/ tezzus', src: 'music/2026/wake up ft tezzus.mp3' },
       { title: 'LOST IT (remaster)', src: 'music/2026/LOST IT REMASTER V1.3.mp3' },
