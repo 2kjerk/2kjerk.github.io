@@ -124,6 +124,9 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
+      { title: 'Succubus', src: 'music/2026/succubus looped.mp3' },
+      { title: 'Allure', src: 'music/2026/allure2.mp3' },
+      { title: 'Reverse Cinderella', src: 'music/2026/Reverse Cinderella.mp3' },
       { title: 'ITS A VIBE', src: 'music/2026/ITS A VIBE.mp3' },
       { title: 'OH MY GOD w/ tezzus', src: 'music/2026/oh my god ft tezzus.mp3' },
       { title: 'WAKE UP w/ tezzus', src: 'music/2026/wake up ft tezzus.mp3' },
