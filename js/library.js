@@ -292,7 +292,7 @@ const MUSIC_LIBRARY = [
       { title: 'hesi', src: 'music/prince/hesi.mp3' },
       { title: 'howtf', src: 'music/prince/howtf.mp3' },
       { title: 'jimihendrix', src: 'music/prince/jimihendrix.mp3' },
-      { title: 'vendetta (credit @5iveplug)', src: 'music/prince/vendetta.mp3' }
+      { title: 'vendetta (credit @5iveplug)', src: 'music/prince/dontcatchme.mp3' }
     ]
   },
   {
