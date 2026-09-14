@@ -124,6 +124,7 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
+      { title: 'BARACK', src: 'music/2026/BARACK.m4a' },
       { title: 'Succubus', src: 'music/2026/succubus looped.mp3' },
       { title: 'Allure', src: 'music/2026/allure2.mp3' },
       { title: 'Reverse Cinderella', src: 'music/2026/Reverse Cinderella.mp3' },
