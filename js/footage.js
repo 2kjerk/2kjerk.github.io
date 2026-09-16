@@ -23,6 +23,12 @@ window.Footage = {
       youtubeId: 'yz9T4WTyoiI',
       title: 'die about session',
       description: 'Studio session'
+    },
+    {
+      type: 'youtube',
+      youtubeId: 'MB76SMdwNhk',
+      title: 'awardshow001 (unseen)',
+      description: 'bts'
     }
   ],
 
