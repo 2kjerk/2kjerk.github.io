@@ -173,6 +173,7 @@ const MUSIC_LIBRARY = [
     coverFallback: 'music/break/Folder.jpg',
     durationText: '',
     tracks: [
+      { title: 'TYPE OF WAY', src: 'music/break/typeofway.mp3' },
       { title: 'HOW IT GO', src: 'music/break/howitgo.mp3' },
       { title: 'ACTING OUT', src: 'music/break/ACTING OUT.mp3' },
       { title: 'FATBOYZ', src: 'music/break/FATBOYZ.mp3' },
