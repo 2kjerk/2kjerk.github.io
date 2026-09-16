@@ -41,6 +41,12 @@ window.Footage = {
       youtubeId: 'Fl7x4cU51uc',
       title: 'ronbeg (unseen)',
       description: 'bts'
+    },
+    {
+      type: 'youtube',
+      youtubeId: 'wUlfOTtDxqQ',
+      title: 'newroomate (unseen)',
+      description: 'bts'
     }
   ],
 
