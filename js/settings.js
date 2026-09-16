@@ -43,7 +43,12 @@ window.Settings = {
     this.syncEqUI(saved);
 
     if (!Player.eqAvailable) {
-      if (this.eqUnavailableNotice) Utils.show(this.eqUnavailableNotice);
+      if (this.eqUnavailableNotice) {
+        if (Player.eqUnavailableReason) {
+          this.eqUnavailableNotice.textContent = Player.eqUnavailableReason;
+        }
+        Utils.show(this.eqUnavailableNotice);
+      }
       this.syncEqDisabledState(true);
     }
 
