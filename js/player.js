@@ -32,10 +32,18 @@ window.Player = {
   isLoading: false,
   isAllShuffle: false,
 
+  isIOS: false,
+  eqUnavailableReason: null,
+  userWantsPlayback: false,
+  _pausedWhileHidden: false,
+
   onTrackChange: null,
   onPlayStateChange: null,
 
   init() {
+    this.isIOS = this.detectIOS();
+    this.setupAudioElement();
+
     const savedVol = localStorage.getItem('fsv-volume');
     if (savedVol !== null) {
       this.volume = parseFloat(savedVol);
@@ -68,6 +76,9 @@ window.Player = {
     });
     this.audio.addEventListener('pause', () => {
       this.isPlaying = false;
+      if (this.userWantsPlayback && document.visibilityState === 'hidden') {
+        this._pausedWhileHidden = true;
+      }
       this.updatePlayPauseUI();
       if (this.onPlayStateChange) this.onPlayStateChange(false);
     });
@@ -78,7 +89,12 @@ window.Player = {
       this.setLoading(false);
     });
 
-    this.eqAvailable = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+    const servedOverHttp = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+    this.eqAvailable = servedOverHttp && !this.isIOS;
+
+    if (servedOverHttp && this.isIOS) {
+      this.eqUnavailableReason = 'The equalizer is turned off on iPhone and iPad so playback keeps going when you leave the browser.';
+    }
 
     this.updateVolumeUI();
     this.updateRepeatUI();
@@ -89,16 +105,46 @@ window.Player = {
   },
 
 
+  detectIOS() {
+    const ua = navigator.userAgent || '';
+    if (/iPad|iPhone|iPod/.test(ua)) return true;
+    return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+  },
+
+  setupAudioElement() {
+    this.audio.preload = 'auto';
+    this.audio.setAttribute('playsinline', '');
+    this.audio.setAttribute('webkit-playsinline', '');
+    this.audio.setAttribute('aria-hidden', 'true');
+    this.audio.style.display = 'none';
+
+    if (!this.audio.parentNode && document.body) {
+      document.body.appendChild(this.audio);
+    }
+  },
+
   initBackgroundResume() {
-    const resume = () => {
-      if (this.audioContext && this.audioContext.state === 'suspended' && this.isPlaying) {
-        this.audioContext.resume().catch(() => {});
-      }
+    const resumeContext = () => {
+      if (!this.audioContext) return;
+      if (this.audioContext.state !== 'suspended') return;
+      this.audioContext.resume().catch(() => {});
     };
 
-    document.addEventListener('visibilitychange', resume);
-    window.addEventListener('pageshow', resume);
-    window.addEventListener('focus', resume);
+    ['pointerdown', 'touchend', 'keydown'].forEach(type => {
+      document.addEventListener(type, resumeContext, { passive: true });
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') return;
+      resumeContext();
+
+      if (this._pausedWhileHidden && this.userWantsPlayback && this.audio.paused && this.audio.src) {
+        this._pausedWhileHidden = false;
+        this.audio.play().catch(() => {});
+      }
+    });
+
+    window.addEventListener('pageshow', resumeContext);
   },
 
 
@@ -106,7 +152,11 @@ window.Player = {
     if (!('mediaSession' in navigator)) return;
 
     navigator.mediaSession.setActionHandler('play', () => this.playAudio().catch(() => {}));
-    navigator.mediaSession.setActionHandler('pause', () => this.audio.pause());
+    navigator.mediaSession.setActionHandler('pause', () => {
+      this.userWantsPlayback = false;
+      this._pausedWhileHidden = false;
+      this.audio.pause();
+    });
     navigator.mediaSession.setActionHandler('previoustrack', () => this.playPrev());
     navigator.mediaSession.setActionHandler('nexttrack', () => this.playNext(true));
 
@@ -167,11 +217,11 @@ window.Player = {
 
 
   getMediaSessionArtworkUrl(project) {
-    if (!project) return Utils.getCoverUrl(null);
-    const isRasterSafe = (url) => /\.(jpe?g|png)$/i.test(url.split('?')[0]);
+    if (!project) return null;
+    const isRasterSafe = (url) => /\.(jpe?g|png|webp)$/i.test(url.split('?')[0]);
     if (project.cover && isRasterSafe(project.cover)) return project.cover;
     if (project.coverFallback && isRasterSafe(project.coverFallback)) return project.coverFallback;
-    return Utils.getCoverUrl(project);
+    return null;
   },
 
   getImageMimeType(url) {
@@ -230,16 +280,19 @@ window.Player = {
   },
 
   ensureAudioReady() {
-    if (!this.eqAvailable) return Promise.resolve();
+    if (!this.eqAvailable) return;
     this.initAudioGraph();
-    if (!this.audioContext) return Promise.resolve();
-    if (this.audioContext.state === 'running') return Promise.resolve();
-    return this.audioContext.resume().catch(() => {});
+    if (!this.audioContext) return;
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume().catch(() => {});
+    }
   },
 
   playAudio() {
-    if (!this.eqAvailable) return this.audio.play();
-    return this.ensureAudioReady().then(() => this.audio.play());
+    this.userWantsPlayback = true;
+    this._pausedWhileHidden = false;
+    this.ensureAudioReady();
+    return this.audio.play();
   },
 
   setEqBand(index, gainDb) {
@@ -287,6 +340,11 @@ window.Player = {
     this.setEqEnabled(this.eqEnabled);
   },
 
+  getCurrentTrack() {
+    if (!this.currentProject || this.currentTrackIdx === -1) return null;
+    return this.currentProject.tracks[this.currentTrackIdx] || null;
+  },
+
   setLoading(isLoading) {
     this.isLoading = isLoading;
     const indicator = Utils.$('#loading-indicator');
@@ -326,6 +384,8 @@ window.Player = {
   togglePlay() {
     if (!this.audio.src) return;
     if (this.isPlaying) {
+      this.userWantsPlayback = false;
+      this._pausedWhileHidden = false;
       this.audio.pause();
     } else {
       this.playAudio().catch(err => console.warn(err));
