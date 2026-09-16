@@ -148,7 +148,7 @@ const MUSIC_LIBRARY = [
       { title: 'feellikethis', src: 'music/2026/feellikethis.mp3' },
       { title: 'feltthat', src: 'music/2026/feltthat.mp3' },
       { title: 'firstdayback', src: 'music/2026/firstdayback.mp3' },
-      { title: 'hesi', src: 'music/2026/hesi.mp3' },
+      { title: 'hesi', src: 'music/prince/hesi.mp3' },
       { title: 'issa issa', src: 'music/2026/issa issa.mp3' },
       { title: 'jimihendrix', src: 'music/2026/jimihendrix.mp3' },
       { title: 'machete', src: 'music/2026/machete.mp3' },
