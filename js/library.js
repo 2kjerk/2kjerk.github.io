@@ -126,7 +126,7 @@ const MUSIC_LIBRARY = [
     tracks: [
       { title: 'THEY THOUGHT I LOST IT', src: 'music/2026/THEYTHOUGHTILOSTIT.mp3' },
       { title: 'PLAQUEBOYBIEBER', src: 'music/2026/ppb.mp3' },
-      { title: 'NOSEBLEEDS', src: 'music/2026/nosebleeds.mp3' },
+      { title: 'NOSEBLEEDS', src: 'music/2026/NOSEBLEEDS.mp3' },
       { title: 'TRENDY LOVE', src: 'music/2026/trendy love v1.11.mp3' },
       { title: 'BARACK', src: 'music/2026/BARACK.m4a' },
       { title: 'Succubus', src: 'music/2026/succubus looped.mp3' },
