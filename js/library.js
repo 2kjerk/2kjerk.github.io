@@ -124,6 +124,8 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
+      { title: 'TOO MANY SHOTS', src: 'music/2026/TOO MANY SHOTS.mp3' },
+      { title: 'CALL ME', src: 'music/2026/CALL ME.mp3' },
       { title: 'THEY THOUGHT I LOST IT', src: 'music/2026/THEYTHOUGHTILOSTIT.mp3' },
       { title: 'PLAQUEBOYBIEBER', src: 'music/2026/ppb.mp3' },
       { title: 'NOSEBLEEDS', src: 'music/2026/NOSEBLEEDS.mp3' },
