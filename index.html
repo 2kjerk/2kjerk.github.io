@@ -82,9 +82,14 @@
           <span>Home</span>
         </a>
 
+        <a href="#" class="nav-item" id="nav-booth">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+          <span>In The Booth (BETA)</span>
+        </a>
+
         <a href="#" class="nav-item" id="nav-footage">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
-          <span>Footage (NEW)</span>
+          <span>Footage</span>
         </a>
 
         <a href="#" class="nav-item" id="nav-settings">
@@ -187,6 +192,59 @@
           <div id="track-list" class="tracklist-rows">
 
           </div>
+        </div>
+      </section>
+
+      <section id="booth-view" class="hidden">
+        <div class="booth-header">
+          <h1 class="booth-title">In The Booth</h1>
+          <p class="booth-subtitle">MORE SOON - dm on twitter to request itbs</p>
+        </div>
+        <div id="booth-grid" class="album-grid">
+
+        </div>
+        <div id="booth-empty" class="booth-empty hidden">
+          <p>No booth projects yet</p>
+        </div>
+      </section>
+
+      <section id="booth-project-view" class="hidden">
+        <div class="album-page-header">
+          <div class="album-art-box">
+            <img id="booth-project-artwork" src="" alt="Project Art" class="album-art-img">
+          </div>
+          <div class="album-page-info">
+            <h1 id="booth-project-title" class="album-page-title">Project Title</h1>
+            <div class="album-page-meta">
+              <span class="meta-artist">plaqueboymax</span>
+              <span class="meta-dot">•</span>
+              <span>In The Booth</span>
+            </div>
+            <div class="album-page-actions">
+              <button id="booth-play-all-btn" class="btn-play-big" title="Play All">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <button id="booth-shuffle-play-btn" class="btn-icon-circle" title="Shuffle">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="tracklist-section">
+          <div class="tracklist-head-row">
+            <span class="tl-num">#</span>
+            <span class="tl-title">Title</span>
+            <span class="tl-dur">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+          </div>
+          <div id="booth-track-list" class="tracklist-rows">
+
+          </div>
+        </div>
+        <div id="booth-note" class="booth-note hidden">
+          <p class="booth-note-title">Empty</p>
+          <p class="booth-note-sub">Songs will be added soon</p>
         </div>
       </section>
 
@@ -388,6 +446,10 @@
       <div class="fs-content">
         <div class="fs-art-wrap">
           <img id="fs-artwork" src="" alt="Album Art" class="fs-artwork">
+          <button id="fs-download-btn" class="download-btn fs-download-btn" aria-label="Download current track" title="Download">
+            <svg class="icon-dl" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4h14v-2H5v2z"/></svg>
+            <svg class="icon-check" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
         </div>
         <div class="fs-info">
           <div id="fs-title" class="fs-title">Select a track</div>
@@ -457,6 +519,7 @@
   <script src="js/sidebar.js"></script>
   <script src="js/search.js"></script>
   <script src="js/footage.js"></script>
+  <script src="js/booth.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -31,6 +31,14 @@ window.Sidebar = {
       });
     }
 
+    const boothBtn = Utils.$('#nav-booth');
+    if (boothBtn) {
+      boothBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.showBooth();
+      });
+    }
+
     const footageBtn = Utils.$('#nav-footage');
     if (footageBtn) {
       footageBtn.addEventListener('click', (e) => {
@@ -114,6 +122,15 @@ window.Sidebar = {
     this._switchView('home-view');
   },
 
+  showBooth() {
+    this.selectedProjectId = null;
+    Utils.$$('.project-item').forEach(el => el.classList.remove('active'));
+    Utils.$$('.nav-item').forEach(n => n.classList.remove('active'));
+    const boothBtn = Utils.$('#nav-booth');
+    if (boothBtn) boothBtn.classList.add('active');
+    this._switchView('booth-view');
+  },
+
   showFootage() {
     this.selectedProjectId = null;
     Utils.$$('.project-item').forEach(el => el.classList.remove('active'));
@@ -135,10 +152,14 @@ window.Sidebar = {
   _switchView(viewId) {
     const home = Utils.$('#home-view');
     const project = Utils.$('#project-view');
+    const booth = Utils.$('#booth-view');
+    const boothProject = Utils.$('#booth-project-view');
     const footage = Utils.$('#footage-view');
     const settings = Utils.$('#settings-view');
     Utils.hide(home);
     Utils.hide(project);
+    if (booth) Utils.hide(booth);
+    if (boothProject) Utils.hide(boothProject);
     if (footage) Utils.hide(footage);
     if (settings) Utils.hide(settings);
 
@@ -228,6 +249,8 @@ window.Sidebar = {
       row.className = `track-row${isPlaying ? ' playing' : ''}`;
       row.dataset.projectId = project.id;
       row.dataset.trackIdx = idx;
+      row.tabIndex = 0;
+      row.setAttribute('role', 'button');
 
       row.innerHTML = `
         <div class="track-num">
@@ -236,10 +259,21 @@ window.Sidebar = {
           <div class="playing-icon"><span class="playing-bars"><span></span><span></span><span></span></span></div>
         </div>
         <div class="track-title">${Utils.displayTitle(track.title)}</div>
-        <div class="track-duration">--:--</div>
+        <div class="track-end">
+          <div class="track-duration">--:--</div>
+          ${Utils.downloadButtonHtml(track.title)}
+        </div>
       `;
 
+      Utils.bindDownloadButton(row.querySelector('.download-btn'), track);
+
       row.addEventListener('click', () => Player.loadAndPlay(project.id, idx));
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          Player.loadAndPlay(project.id, idx);
+        }
+      });
       trackList.appendChild(row);
     });
 
@@ -341,7 +375,10 @@ window.Sidebar = {
           <div class="search-track-title">${Utils.displayTitle(track.title)}</div>
           <div class="search-track-project">${project.title}</div>
         </div>
+        ${Utils.downloadButtonHtml(track.title)}
       `;
+
+      Utils.bindDownloadButton(row.querySelector('.download-btn'), track);
 
       row.addEventListener('click', () => {
         this.selectProject(project.id);

@@ -1255,6 +1255,53 @@ ul {
   font-size: 16px;
 }
 
+#booth-view {
+  padding-bottom: var(--space-12);
+}
+
+.booth-header {
+  margin: var(--space-8) var(--space-8) var(--space-6);
+}
+
+.booth-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.booth-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.booth-empty {
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+#booth-project-view {
+  padding-bottom: var(--space-12);
+}
+
+.booth-note {
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+}
+
+.booth-note-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.booth-note-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
 #settings-view {
   padding: 0 var(--space-8) var(--space-12);
 }
@@ -1671,6 +1718,11 @@ ul {
   background-color: var(--bg-elevated);
 }
 
+.track-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .track-num {
   text-align: center;
   color: var(--text-secondary);
@@ -1708,6 +1760,102 @@ ul {
   color: var(--text-secondary);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.track-end {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.85);
+  pointer-events: none;
+  transition: opacity var(--duration) var(--ease), transform var(--duration) var(--ease), color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+}
+
+.track-row .download-btn {
+  position: absolute;
+  right: -4px;
+}
+
+.download-btn .icon-check {
+  display: none;
+}
+
+.download-btn.is-done .icon-dl {
+  display: none;
+}
+
+.download-btn.is-done .icon-check {
+  display: block;
+}
+
+.download-btn:hover {
+  color: var(--accent);
+  background-color: var(--accent-dim);
+}
+
+.download-btn:active {
+  transform: scale(0.85);
+}
+
+.download-btn.is-done {
+  color: var(--accent);
+}
+
+.track-row:hover .track-duration {
+  opacity: 0;
+}
+
+.track-row:hover .download-btn,
+.search-track-row:hover .download-btn,
+.download-btn.is-done {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.download-btn:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+@media (hover: none) {
+  .track-row .download-btn,
+  .search-track-row .download-btn {
+    position: static;
+    width: 36px;
+    height: 36px;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .track-row {
+    grid-template-columns: 48px 1fr max-content;
+  }
+
+  .track-row .track-duration {
+    opacity: 1;
+  }
 }
 
 .track-row.playing .track-title {
@@ -2440,6 +2588,14 @@ ul {
     gap: var(--space-4);
   }
 
+  .booth-header {
+    margin: var(--space-6) var(--space-4) var(--space-4);
+  }
+
+  .booth-note {
+    padding: var(--space-12) var(--space-4);
+  }
+
   #footage-view {
     padding: 0 var(--space-4) var(--space-8);
   }
@@ -2508,7 +2664,7 @@ ul {
   }
 
   .track-row {
-    grid-template-columns: 36px 1fr 48px;
+    grid-template-columns: 36px 1fr max-content;
     padding: 8px var(--space-2);
   }
 
@@ -2716,6 +2872,7 @@ ul {
 }
 
 .fs-art-wrap {
+  position: relative;
   width: 100%;
   max-width: 340px;
   aspect-ratio: 1 / 1;
@@ -2723,6 +2880,33 @@ ul {
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
   transition: transform 0.6s var(--ease);
+}
+
+.fs-download-btn {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.85);
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.fs-download-btn:hover {
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  transform: scale(1.06);
+}
+
+.fs-download-btn.is-done {
+  color: var(--accent);
 }
 
 .fs-player-open .fs-art-wrap {

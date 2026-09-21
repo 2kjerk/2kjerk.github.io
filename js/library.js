@@ -332,5 +332,8 @@ const MUSIC_LIBRARY = [
 ];
 
 function getProject(id) {
-  return MUSIC_LIBRARY.find(p => p.id === id) || null;
+  const inLibrary = MUSIC_LIBRARY.find(p => p.id === id);
+  if (inLibrary) return inLibrary;
+  if (window.Booth && typeof Booth.getProject === 'function') return Booth.getProject(id);
+  return null;
 }

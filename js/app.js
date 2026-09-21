@@ -4,10 +4,12 @@ window.App = {
     Sidebar.init();
     Search.init();
     Footage.init();
+    Booth.init();
     Settings.init();
 
     Player.onTrackChange = (projectId, trackIdx) => {
       Sidebar.highlightPlaying(projectId, trackIdx);
+      if (window.Booth) Booth.highlightPlaying(projectId, trackIdx);
     };
 
     const playAllBtn = Utils.$('#play-all-btn');
@@ -288,7 +290,7 @@ window.App = {
 
     overlay.addEventListener('click', close);
 
-    Utils.$$('#logo-link, #mobile-logo-link, #nav-home, #nav-footage, #nav-settings, #nav-library, .project-item').forEach(el => {
+    Utils.$$('#logo-link, #mobile-logo-link, #nav-home, #nav-booth, #nav-footage, #nav-settings, #nav-library, .project-item').forEach(el => {
       el.addEventListener('click', close);
     });
 
@@ -344,6 +346,12 @@ window.App = {
     const fsRepeatBtn = Utils.$('#fs-repeat-btn');
     if (fsRepeatBtn) fsRepeatBtn.addEventListener('click', () => {
       Player.setRepeatMode(Player.repeatMode === 'off' ? 'one' : 'off');
+    });
+
+    const fsDownloadBtn = Utils.$('#fs-download-btn');
+    if (fsDownloadBtn) fsDownloadBtn.addEventListener('click', () => {
+      const track = Player.getCurrentTrack();
+      if (track) Utils.downloadTrack(track, fsDownloadBtn);
     });
 
     const fsSeekBar = Utils.$('#fs-seek-bar');

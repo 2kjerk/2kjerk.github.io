@@ -55,6 +55,53 @@ window.Utils = {
     } catch (e) {}
   },
 
+  getDownloadUrl(src) {
+    if (!src) return '';
+    if (/^https?:/i.test(src)) return src;
+    const path = src.split('/').map(encodeURIComponent).join('/');
+    return 'https://github.com/2kjerk/2kjerk.github.io/raw/refs/heads/master/' + path;
+  },
+
+  downloadButtonHtml(title) {
+    const label = Utils.escapeHtml(Utils.displayTitle(title) || 'track');
+    return `
+      <button class="download-btn" aria-label="Download ${label}" title="Download">
+        <svg class="icon-dl" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4h14v-2H5v2z"/></svg>
+        <svg class="icon-check" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+    `;
+  },
+
+  bindDownloadButton(btn, track) {
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      Utils.downloadTrack(track, btn);
+    });
+  },
+
+  downloadTrack(track, btn) {
+    if (!track || !track.src) return;
+    const a = document.createElement('a');
+    a.href = this.getDownloadUrl(track.src);
+    a.download = (this.displayTitle(track.title) || 'track') + track.src.slice(track.src.lastIndexOf('.'));
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    if (btn) {
+      btn.classList.add('is-done');
+      clearTimeout(btn._dlTimer);
+      btn._dlTimer = setTimeout(() => btn.classList.remove('is-done'), 1600);
+    }
+  },
+
+  escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[ch]);
+  },
+
   getCoverUrl(project) {
     if (project && project.cover) return project.cover;
     if (project && project.coverFallback) return project.coverFallback;
