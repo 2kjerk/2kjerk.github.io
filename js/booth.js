@@ -10,11 +10,38 @@ window.Booth = {
       coverFallback: null,
       durationText: '',
       tracks: [
-        { title: '1v1', src: 'music/inthebooth/slayr/1v1.mp3' },
-        { title: 'DO OR DIE', src: 'music/inthebooth/slayr/DO OR DIE.mp3' },
         { title: 'HELLO MOLLY', src: 'music/inthebooth/slayr/HELLO MOLLY.mp3' },
         { title: 'LAVENDER TOWN', src: 'music/inthebooth/slayr/LAVENDER TOWN.mp3' },
         { title: 'SECOND CHANCES', src: 'music/inthebooth/slayr/SECOND CHANCES.mp3' }
+      ]
+    },
+    {
+      id: 'uno',
+      title: 'Uno The Activist',
+      folder: 'unotheactivist',
+      cover: 'https://i.ytimg.com/vi/x5AHZ0tmPUc/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBndBjYhsTmf_O--NEkVgRReJL23w',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'CONCEITED', src: 'music/inthebooth/unotheactivist/CONCEITED.mp3' },
+        { title: 'ISSA ISSA', src: 'music/inthebooth/unotheactivist/ISSA ISSA.mp3' },
+        { title: 'MAN OF THE YEAR', src: 'music/inthebooth/unotheactivist/MAN OF THE YEAR.mp3' },
+        { title: 'SAFE', src: 'music/inthebooth/unotheactivist/SAFE.mp3' },
+        { title: 'WHAT I LIKE', src: 'music/inthebooth/unotheactivist/WHAT I LIKE.mp3' }
+      ]
+    },
+    {
+      id: 'dsavage',
+      title: 'D Savage',
+      folder: 'dsavage',
+      cover: 'https://i.ytimg.com/vi/a6HTw9ZRg_4/maxresdefault.jpg',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'INTHEJ', src: 'music/inthebooth/dsavage/INTHEJ.mp3' },
+        { title: 'MATTRESS', src: 'music/inthebooth/dsavage/MATTRESS.mp3' },
+        { title: 'MONEY COUNTER', src: 'music/inthebooth/dsavage/MONEYCOUNTER.mp3' },
+        { title: 'UH HUH', src: 'music/inthebooth/dsavage/UH HUH.mp3' }
       ]
     }
   ],
@@ -128,8 +155,6 @@ window.Booth = {
       row.className = `track-row${isPlaying ? ' playing' : ''}`;
       row.dataset.projectId = project.id;
       row.dataset.trackIdx = idx;
-      row.tabIndex = 0;
-      row.setAttribute('role', 'button');
 
       row.innerHTML = `
         <div class="track-num">
@@ -138,21 +163,10 @@ window.Booth = {
           <div class="playing-icon"><span class="playing-bars"><span></span><span></span><span></span></span></div>
         </div>
         <div class="track-title">${Utils.displayTitle(track.title)}</div>
-        <div class="track-end">
-          <div class="track-duration">--:--</div>
-          ${Utils.downloadButtonHtml(track.title)}
-        </div>
+        <div class="track-duration">--:--</div>
       `;
 
-      Utils.bindDownloadButton(row.querySelector('.download-btn'), track);
-
       row.addEventListener('click', () => Player.loadAndPlay(project.id, idx));
-      row.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          Player.loadAndPlay(project.id, idx);
-        }
-      });
       trackList.appendChild(row);
     });
 
