@@ -3,6 +3,19 @@ window.Booth = {
 
   projects: [
     {
+      id: 'xaiversobased',
+      title: 'xaiversobased',
+      folder: 'xaiversobased',
+      cover: 'https://media.discordapp.net/attachments/1518887234449969234/1554361439811010650/Screenshot_2026-09-29_001655.png?ex=6abc9b65&is=6abb49e5&hm=0555dea74dbb3c0fd0308aa0b73445a689228feb63a57f4f194e21d55331a35d&=&format=webp&quality=lossless',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'FIELD TRIPS', src: 'music/inthebooth/xaiversobased/FIELD TRIPS.mp3' },
+        { title: 'CHRIS PAUL', src: 'music/inthebooth/xaiversobased/CHRIS PAUL.mp3' },
+        { title: 'MOTTO', src: 'music/inthebooth/xaiversobased/MOTTO.mp3' }
+      ]
+    },
+    {
       id: 'slayr',
       title: 'Slayr',
       folder: 'slayr',
