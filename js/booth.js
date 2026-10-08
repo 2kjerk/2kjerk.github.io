@@ -3,6 +3,18 @@ window.Booth = {
 
   projects: [
     {
+      id: 'jacquees',
+      title: 'jacquees',
+      folder: 'jacquees',
+      cover: 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTw-WA84B0xbTYE0MJMDJdUiKem7oTeCsrgdfQXHBavVg4tQb9C0cy5mHuZ4wFQMugNh6qd1pQMXBsWGyY',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'demoen1', src: 'music/inthebooth/jacquees/demoen1.mp3' },
+        { title: 'familiar', src: 'music/inthebooth/jacquees/Familiar.mp3' }
+      ]
+    },
+    {
       id: 'xaiversobased',
       title: 'xaiversobased',
       folder: 'xaiversobased',
@@ -55,18 +67,6 @@ window.Booth = {
         { title: 'MATTRESS', src: 'music/inthebooth/dsavage/MATTRESS.mp3' },
         { title: 'MONEY COUNTER', src: 'music/inthebooth/dsavage/MONEYCOUNTER.mp3' },
         { title: 'UH HUH', src: 'music/inthebooth/dsavage/UH HUH.mp3' }
-      ]
-    },
-    {
-      id: 'jacquees',
-      title: 'jacquees',
-      folder: 'jacquees',
-      cover: 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTw-WA84B0xbTYE0MJMDJdUiKem7oTeCsrgdfQXHBavVg4tQb9C0cy5mHuZ4wFQMugNh6qd1pQMXBsWGyY',
-      coverFallback: null,
-      durationText: '',
-      tracks: [
-        { title: 'demoen1', src: 'music/inthebooth/jacquees/demoen1.mp3' },
-        { title: 'familiar', src: 'music/inthebooth/jacquees/Familiar.mp3' }
       ]
     }
   ],
