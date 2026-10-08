@@ -6,7 +6,7 @@ window.Booth = {
       id: 'xaiversobased',
       title: 'xaiversobased',
       folder: 'xaiversobased',
-      cover: 'https://media.discordapp.net/attachments/1518887234449969234/1554361439811010650/Screenshot_2026-09-29_001655.png?ex=6abfe725&is=6abe95a5&hm=3ace0c0adc4277a136521d3dded4304b903aa30f50c9298f96572e0d2858d27e&=&format=webp&quality=lossless',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUjOslqm4MA7Wo9YQhLbSOYINXLGALFU2-zfKZfP71Sp_ZJQ7GtnwYShWAoQWKW0X_phCH6CRagX60jX3YiDyuSQLQlYx8xcpcUldI1g&s=10',
       coverFallback: null,
       durationText: '',
       tracks: [
@@ -61,7 +61,7 @@ window.Booth = {
       id: 'jacquees',
       title: 'jacquees',
       folder: 'jacquees',
-      cover: 'https://media.discordapp.net/attachments/1518887234449969234/1557670693879943178/HUDmCeYWYAAjDWa.png?ex=6ac8a561&is=6ac753e1&hm=c01b48750958950a6c5eaeeeec3ac470b935c579f7186dc50d6762eb19c0e2d8&=&format=webp&quality=lossless',
+      cover: 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTw-WA84B0xbTYE0MJMDJdUiKem7oTeCsrgdfQXHBavVg4tQb9C0cy5mHuZ4wFQMugNh6qd1pQMXBsWGyY',
       coverFallback: null,
       durationText: '',
       tracks: [
