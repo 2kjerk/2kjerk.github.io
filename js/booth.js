@@ -56,6 +56,18 @@ window.Booth = {
         { title: 'MONEY COUNTER', src: 'music/inthebooth/dsavage/MONEYCOUNTER.mp3' },
         { title: 'UH HUH', src: 'music/inthebooth/dsavage/UH HUH.mp3' }
       ]
+    },
+    {
+      id: 'jacquees',
+      title: 'jacquees',
+      folder: 'jacquees',
+      cover: 'https://media.discordapp.net/attachments/1518887234449969234/1557670693879943178/HUDmCeYWYAAjDWa.png?ex=6ac8a561&is=6ac753e1&hm=c01b48750958950a6c5eaeeeec3ac470b935c579f7186dc50d6762eb19c0e2d8&=&format=webp&quality=lossless',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'demoen1', src: 'music/inthebooth/jacquees/demoen1.mp3' },
+        { title: 'familiar', src: 'music/inthebooth/jacquees/Familiar.mp3' }
+      ]
     }
   ],
 
