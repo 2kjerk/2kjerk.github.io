@@ -15,6 +15,17 @@ window.Booth = {
       ]
     },
     {
+      id: 'skaiwater',
+      title: 'skaiwater',
+      folder: 'skaiwater',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUjOslqm4MA7Wo9YQhLbSOYINXLGALFU2-zfKZfP71Sp_ZJQ7GtnwYShWAoQWKW0X_phCH6CRagX60jX3YiDyuSQLQlYx8xcpcUldI1g&s=10',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'punk monk', src: 'music/inthebooth/skaiwater/punkmonk.mp3' }
+      ]
+    },
+    {
       id: 'xaiversobased',
       title: 'xaiversobased',
       folder: 'xaiversobased',
