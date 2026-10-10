@@ -137,6 +137,7 @@ const MUSIC_LIBRARY = [
       { title: 'Reverse Cinderella', src: 'music/2026/Reverse Cinderella.mp3' },
       { title: 'ITS A VIBE', src: 'music/2026/ITS A VIBE.mp3' },
       { title: 'OH MY GOD w/ tezzus', src: 'music/2026/oh my god ft tezzus.mp3' },
+      { title: 'WAKE UP w/ tezzus (REMASTER)', src: 'music/2026/sippingdrankkkpoppingpillllssssss.mp3' },
       { title: 'WAKE UP w/ tezzus', src: 'music/2026/wake up ft tezzus.mp3' },
       { title: 'how you feel?', src: 'music/2026/how you feel.mp3' },
       { title: 'lost love', src: 'music/2026/lost love.mp3' },
