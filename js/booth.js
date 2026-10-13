@@ -10,7 +10,7 @@ window.Booth = {
       coverFallback: null,
       durationText: '',
       tracks: [
-        { title: 'demoen1', src: 'music/inthebooth/jacquees/demoen1.mp3' },
+        { title: 'she know', src: 'music/inthebooth/jacquees/demoen1.mp3' },
         { title: 'familiar', src: 'music/inthebooth/jacquees/Familiar.mp3' }
       ]
     },
