@@ -1,5 +1,18 @@
 const MUSIC_LIBRARY = [
   {
+    id: 'soul',
+    title: 'SOUL',
+    folder: 'SOUL',
+    cover: 'music/SOUL.jpg',
+    coverFallback: 'music/SOUL.jpg',
+    durationText: '',
+    tracks: [
+      { title: 'prettyboyswag', src: 'music/SOUL/prettyboyswag.mp3' },
+      { title: 'prettyboyswag 2', src: 'music/SOUL/prettyboyswag 2.mp3' },
+      { title: 'pablo know plaqueboy', src: 'music/SOUL/pabloknowplaqueboy.mp3' }
+    ]
+  },
+  {
     id: '2023-before',
     title: '2023 & Before',
     folder: '2023 & Before',
