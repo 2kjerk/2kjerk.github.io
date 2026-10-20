@@ -4,7 +4,7 @@ const MUSIC_LIBRARY = [
     title: 'SOUL',
     folder: 'SOUL',
     cover: 'music/SOUL.jpg',
-    coverFallback: 'music/SOUL.jpg',
+    coverFallback: null,
     durationText: '',
     tracks: [
       { title: 'prettyboyswag', src: 'music/SOUL/prettyboyswag.mp3' },
