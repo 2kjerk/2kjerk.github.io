@@ -9,7 +9,7 @@ const MUSIC_LIBRARY = [
     tracks: [
       { title: 'prettyboyswag', src: 'music/SOUL/prettyboyswag.mp3' },
       { title: 'prettyboyswag 2', src: 'music/SOUL/prettyboyswag 2.mp3' },
-      { title: 'pablo know plaqueboy', src: 'music/SOUL/pabloknowplaqueboy.mp3' }
+      { title: 'pablo know plaqueboy', src: 'music/SOUL/pablo know plaqueboy V2.mp3' }
     ]
   },
   {
