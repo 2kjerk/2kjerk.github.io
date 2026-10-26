@@ -1,7 +1,7 @@
 const MUSIC_LIBRARY = [
   {
     id: 'soul',
-    title: 'SOUL',
+    title: 'ELLIOT',
     folder: 'SOUL',
     cover: 'music/SOUL.jpg',
     coverFallback: null,
