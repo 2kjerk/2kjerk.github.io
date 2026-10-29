@@ -18,7 +18,7 @@ window.Booth = {
       id: 'skaiwater',
       title: 'skaiwater',
       folder: 'skaiwater',
-      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUjOslqm4MA7Wo9YQhLbSOYINXLGALFU2-zfKZfP71Sp_ZJQ7GtnwYShWAoQWKW0X_phCH6CRagX60jX3YiDyuSQLQlYx8xcpcUldI1g&s=10',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtabsZ3mR__l9CPceuxkf7J-88OdA4tXolLsHouexrUok4OEiVrzeb8qNx&s=10',
       coverFallback: null,
       durationText: '',
       tracks: [
