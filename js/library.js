@@ -7,6 +7,8 @@ const MUSIC_LIBRARY = [
     coverFallback: null,
     durationText: '',
     tracks: [
+      { title: 'SORRY NOT SORRY', src: 'music/SOUL/SORRY NOT SORRY.mp3' },
+      { title: 'DEEPER', src: 'music/SOUL/DEEPER.mp3' },
       { title: 'prettyboyswag', src: 'music/SOUL/prettyboyswag.mp3' },
       { title: 'prettyboyswag 2', src: 'music/SOUL/prettyboyswag 2.mp3' },
       { title: 'pablo know plaqueboy', src: 'music/SOUL/pablo know plaqueboy V2.mp3' }
