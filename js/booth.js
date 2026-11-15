@@ -1,0 +1,244 @@
+window.Booth = {
+  selectedProjectId: null,
+
+  projects: [
+    {
+      id: 'jacquees',
+      title: 'jacquees',
+      folder: 'jacquees',
+      cover: 'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTw-WA84B0xbTYE0MJMDJdUiKem7oTeCsrgdfQXHBavVg4tQb9C0cy5mHuZ4wFQMugNh6qd1pQMXBsWGyY',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'she know', src: 'music/inthebooth/jacquees/she know max verse v3.mp3' },
+        { title: 'familiar', src: 'music/inthebooth/jacquees/Familiar.mp3' }
+      ]
+    },
+    {
+      id: 'skaiwater',
+      title: 'skaiwater',
+      folder: 'skaiwater',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtabsZ3mR__l9CPceuxkf7J-88OdA4tXolLsHouexrUok4OEiVrzeb8qNx&s=10',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'punk monk', src: 'music/inthebooth/skaiwater/punkmonk.mp3' }
+      ]
+    },
+    {
+      id: 'xaiversobased',
+      title: 'xaiversobased',
+      folder: 'xaiversobased',
+      cover: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUjOslqm4MA7Wo9YQhLbSOYINXLGALFU2-zfKZfP71Sp_ZJQ7GtnwYShWAoQWKW0X_phCH6CRagX60jX3YiDyuSQLQlYx8xcpcUldI1g&s=10',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'FIELD TRIPS', src: 'music/inthebooth/xaiversobased/FIELD TRIPS.mp3' },
+        { title: 'CHRIS PAUL', src: 'music/inthebooth/xaiversobased/CHRIS PAUL.mp3' },
+        { title: 'MOTTO', src: 'music/inthebooth/xaiversobased/MOTTO.mp3' }
+      ]
+    },
+    {
+      id: 'slayr',
+      title: 'Slayr',
+      folder: 'slayr',
+      cover: 'https://pbs.twimg.com/media/HSrl3eOWgAAfkqb.jpg',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'HELLO MOLLY', src: 'music/inthebooth/slayr/HELLO MOLLY.mp3' },
+        { title: 'LAVENDER TOWN', src: 'music/inthebooth/slayr/LAVENDER TOWN.mp3' },
+        { title: 'SECOND CHANCES', src: 'music/inthebooth/slayr/SECOND CHANCES.mp3' }
+      ]
+    },
+    {
+      id: 'uno',
+      title: 'Uno The Activist',
+      folder: 'unotheactivist',
+      cover: 'https://i.ytimg.com/vi/x5AHZ0tmPUc/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBndBjYhsTmf_O--NEkVgRReJL23w',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'CONCEITED', src: 'music/inthebooth/unotheactivist/CONCEITED.mp3' },
+        { title: 'ISSA ISSA', src: 'music/inthebooth/unotheactivist/ISSA ISSA.mp3' },
+        { title: 'MAN OF THE YEAR', src: 'music/inthebooth/unotheactivist/MAN OF THE YEAR.mp3' },
+        { title: 'SAFE', src: 'music/inthebooth/unotheactivist/SAFE.mp3' },
+        { title: 'WHAT I LIKE', src: 'music/inthebooth/unotheactivist/WHAT I LIKE.mp3' }
+      ]
+    },
+    {
+      id: 'dsavage',
+      title: 'D Savage',
+      folder: 'dsavage',
+      cover: 'https://i.ytimg.com/vi/a6HTw9ZRg_4/maxresdefault.jpg',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+        { title: 'INTHEJ', src: 'music/inthebooth/dsavage/INTHEJ.mp3' },
+        { title: 'MATTRESS', src: 'music/inthebooth/dsavage/MATTRESS.mp3' },
+        { title: 'MONEY COUNTER', src: 'music/inthebooth/dsavage/MONEYCOUNTER.mp3' },
+        { title: 'UH HUH', src: 'music/inthebooth/dsavage/UH HUH.mp3' }
+      ]
+    }
+  ],
+
+
+
+  getProject(id) {
+    return this.projects.find(p => p.id === id) || null;
+  },
+
+  init() {
+    this.renderGrid();
+
+    const playAllBtn = Utils.$('#booth-play-all-btn');
+    if (playAllBtn) {
+      playAllBtn.addEventListener('click', () => {
+        if (this.selectedProjectId) Player.loadAndPlay(this.selectedProjectId, 0);
+      });
+    }
+
+    const shufflePlayBtn = Utils.$('#booth-shuffle-play-btn');
+    if (shufflePlayBtn) {
+      shufflePlayBtn.addEventListener('click', () => {
+        if (!this.selectedProjectId) return;
+        const project = this.getProject(this.selectedProjectId);
+        if (!project || !project.tracks.length) return;
+        if (!Player.shuffleOn) Player.toggleShuffle();
+        const randomIdx = Math.floor(Math.random() * project.tracks.length);
+        Player.loadAndPlay(project.id, randomIdx);
+      });
+    }
+  },
+
+  renderGrid() {
+    const grid = Utils.$('#booth-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    this.projects.forEach((project, i) => {
+      const card = document.createElement('div');
+      card.className = 'grid-card';
+      card.dataset.projectId = project.id;
+      card.style.setProperty('--card-i', i);
+      const coverUrl = Utils.getCoverUrl(project);
+
+      card.innerHTML = `
+        <div class="grid-card-art-wrap">
+          <img class="grid-card-art" src="${coverUrl}" alt="${project.title}" onerror="this.src='${Utils.getCoverUrl(null)}'">
+          <button class="grid-card-play" aria-label="Open ${project.title}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+          </button>
+        </div>
+        <div class="grid-card-body">
+          <div class="grid-card-text">
+            <div class="grid-card-title">${project.title}</div>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => this.selectProject(project.id));
+
+      grid.appendChild(card);
+    });
+
+    const empty = Utils.$('#booth-empty');
+    if (empty) {
+      this.projects.length ? Utils.hide(empty) : Utils.show(empty);
+    }
+  },
+
+  selectProject(projectId) {
+    const project = this.getProject(projectId);
+    if (!project) return;
+
+    this.selectedProjectId = projectId;
+
+    Utils.$$('.nav-item').forEach(n => n.classList.remove('active'));
+    const boothBtn = Utils.$('#nav-booth');
+    if (boothBtn) boothBtn.classList.add('active');
+
+    Sidebar._switchView('booth-project-view');
+
+    this.renderProjectDetail(project);
+  },
+
+  renderProjectDetail(project) {
+    const art = Utils.$('#booth-project-artwork');
+    const title = Utils.$('#booth-project-title');
+    const note = Utils.$('#booth-note');
+    const trackList = Utils.$('#booth-track-list');
+    const coverUrl = Utils.getCoverUrl(project);
+
+    if (art) {
+      art.src = coverUrl;
+      art.onerror = () => { art.src = Utils.getCoverUrl(null); };
+    }
+    if (title) title.textContent = project.title;
+    if (note) {
+      project.tracks.length ? Utils.hide(note) : Utils.show(note);
+    }
+
+    if (!trackList) return;
+    trackList.innerHTML = '';
+
+    if (!project.tracks.length) return;
+
+    project.tracks.forEach((track, idx) => {
+      const isPlaying = Player.currentProject?.id === project.id && Player.currentTrackIdx === idx;
+
+      const row = document.createElement('div');
+      row.className = `track-row${isPlaying ? ' playing' : ''}`;
+      row.dataset.projectId = project.id;
+      row.dataset.trackIdx = idx;
+
+      row.innerHTML = `
+        <div class="track-num">
+          <span class="track-num-text">${idx + 1}</span>
+          <svg class="track-play-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+          <div class="playing-icon"><span class="playing-bars"><span></span><span></span><span></span></span></div>
+        </div>
+        <div class="track-title">${Utils.displayTitle(track.title)}</div>
+        <div class="track-duration">--:--</div>
+      `;
+
+      row.addEventListener('click', () => Player.loadAndPlay(project.id, idx));
+      trackList.appendChild(row);
+    });
+
+    this.lazyLoadDurations(project);
+  },
+
+  lazyLoadDurations(project) {
+    const rows = Utils.$$('#booth-track-list .track-row');
+    project.tracks.forEach((track, idx) => {
+      const el = rows[idx]?.querySelector('.track-duration');
+
+      const cached = Utils.getCachedDuration(track.src);
+      if (cached !== null) {
+        if (el) el.textContent = Utils.formatTime(cached);
+        return;
+      }
+
+      const tmp = new Audio();
+      tmp.src = track.src;
+      tmp.addEventListener('loadedmetadata', () => {
+        const duration = tmp.duration;
+        Utils.setCachedDuration(track.src, duration);
+        const rowEl = rows[idx]?.querySelector('.track-duration');
+        if (rowEl) rowEl.textContent = Utils.formatTime(duration);
+        tmp.src = '';
+      });
+    });
+  },
+
+  highlightPlaying(projectId, trackIdx) {
+    const rows = Utils.$$('#booth-track-list .track-row');
+    rows.forEach(r => r.classList.remove('playing'));
+
+    if (this.selectedProjectId === projectId) {
+      const row = Utils.$(`#booth-track-list .track-row[data-project-id="${projectId}"][data-track-idx="${trackIdx}"]`);
+      if (row) row.classList.add('playing');
+    }
+  }
+};
