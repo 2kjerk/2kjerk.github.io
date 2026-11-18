@@ -3,6 +3,16 @@ window.Booth = {
 
   projects: [
     {
+      id: 'hawsa',
+      title: 'hawsa',
+      folder: 'hawsa',
+      cover: 'https://imgs.search.brave.com/6Kx0ecEjKBrq4utEGr-ZNz_5iz_9ZNJ6Zy_sQVmEuP4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmF1/ZGlvbWFjay5jb20v/aGF3c2EvNTZiOTA4/OGZhYy53ZWJwP3dp/ZHRoPTQ1Ng',
+      coverFallback: null,
+      durationText: '',
+      tracks: [
+      ]
+    },
+    {
       id: 'jacquees',
       title: 'jacquees',
       folder: 'jacquees',
