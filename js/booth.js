@@ -12,6 +12,7 @@ window.Booth = {
       tracks: [
         { title: 'song 1', src: 'music/hawsa/hawsa song 1.mp3' },
         { title: 'fly shit', src: 'music/hawsa/fly shit.mp3' },
+        { title: 'what you know', src: 'music/hawsa/what you know.mp3' },
       ]
     },
     {
