@@ -10,7 +10,7 @@ window.Booth = {
       coverFallback: null,
       durationText: '',
       tracks: [
-        { title: 'song 1', src: 'music/inthebooth/hawsa/hawsa song 1.mp3' }
+        { title: 'song 1', src: 'music/hawsa/hawsa song 1.mp3' }
       ]
     },
     {
